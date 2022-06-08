@@ -1,14 +1,14 @@
 IDProfesor;Nombre;Materias
-P0;Sin profesor asignado;1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
-P1;Joshua Triana;1,2,4
-P2;Carlos Tovar;2,4,3
-P3;Angeles Jaramillo;5,6,7,8
-P4;Dalila Campaz;9,10,11,12
-P5;Sneider Pineda;1,2,4,3
-P6;Luis Cabuya;1,2,3,4
-P7;Jose Quintero Aguilar;3,1,4,2
-P8;Wilson Forero;5,6,7,8
-P9;Heberto Gomez;9,10,11,12
-P10;Nancy Penagos;5,6,7,8
-P11;Diana Gordillo;9,10,11,12
-P12;Flor Montenegro;4,1,2
+P0;Sin profesor asignado;[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
+P1;Joshua Triana;[1,2,4]
+P2;Carlos Tovar;[2,4,3]
+P3;Angeles Jaramillo;[5,6,7,8]
+P4;Dalila Campaz;[9,10,11,12]
+P5;Sneider Pineda;[1,2,4,3]
+P6;Luis Cabuya;[1,2,3,4]
+P7;Jose Quintero Aguilar;[3,1,4,2]
+P8;Wilson Forero;[5,6,7,8]
+P9;Heberto Gomez;[9,10,11,12]
+P10;Nancy Penagos;[5,6,7,8]
+P11;Diana Gordillo;[9,10,11,12]
+P12;Flor Montenegro;[4,1,2]
