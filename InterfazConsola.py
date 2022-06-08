@@ -1,7 +1,7 @@
 #Modulo para crear las funciones de impresion por pantalla para el usuario
 from os import system as dossystem
 from typing import Tuple  #añadida para limpiar consola
-
+Version = "SNApp V1.0"
 #Funcion para limpiar la pantalla cada vez que se abre un menu o un informe
 def limpiapantalla():
     try:
@@ -13,7 +13,7 @@ def limpiapantalla():
 def menuInicial():
     limpiapantalla()
     opciones = 5
-    print("SNApp V1.0")
+    print(Version)
     print(" ---------------------------------------------------------- ")
     print("|               Menu Principal                             |")
     print(" ---------------------------------------------------------- ")
@@ -30,7 +30,7 @@ def menuInicial():
 #Funcion para imprimir en pantalla el Menu Agregar
 def menuAgregar():
     limpiapantalla()
-    print("SNApp V1.0")
+    print(Version)
     print(" ---------------------------------------------------------- ")
     print("|               Agregar Informacion                        |")
     print(" ---------------------------------------------------------- ")
