@@ -1,6 +1,6 @@
 #Modulo para las funciones de creacion, lectura, edicion y eliminacion de la información
 import pandas as pd
-#Se crean las funciones para cargar datos
+#------------------Se crean las funciones para cargar datos-------------------------------------
 def CargaNotasCSV():
     # Leyendo archivo csv
     try:
@@ -70,15 +70,45 @@ def CargaGruposCSV():
         return "Error de analisis", 0  
     except Exception:
         return "Alguna otra Exepcion", 0  
-    
-    '''
-    Args:
-        df:  DataFrame tblProfesores
-        df:  DataFrame tblMaterias
-        IDProf: Si se desea filtrar por profesor se ingresa el IDProfesor
-        IDMate: Si se desea filtrar por materia se ingresa el IDMateria
-    '''
 
+#------------------Se crean las funciones para Modificar Archivos CSV-------------------------------------
+
+def ReiniciarDB():
+    reiniciado = 0
+    try:
+        with open('Materias.csv','w') as archivo:
+            print('IDMateria;Materia;Ciclo;Creditos', file = archivo)
+        reiniciado += 1
+    except :
+        pass
+    try:
+        with open('Profesores.csv','w') as archivo:
+            print('IDProfesor;Nombre;IDMateria', file = archivo)
+        reiniciado +=1
+    except :
+        pass
+    try:
+        with open('Grupos.csv','w') as archivo:
+            print('IDGrupo;Periodo;Horario;Activo;IDMaterias;IDProfesores', file = archivo)
+        reiniciado +=1
+    except:
+        pass
+    try:
+        with open('Estudiantes.csv','w') as archivo:
+            print('IDEstudiante;Nombres;Apellidos;Email;IDGrupo', file = archivo)
+        reiniciado +=1
+    except :
+        pass
+    try:
+        with open('Notas.csv','w') as archivo:
+            print('IdNota;IDEstudiante;Nota;IDMateria', file = archivo)
+        reiniciado +=1
+    except :
+        pass
+    return reiniciado
+
+
+#------------------ Se crean las funciones para Consultar Informacion -------------------------------------
 
 def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str = 0, IDMate:str = 0 ):
     '''
@@ -117,5 +147,4 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
     # Ordenando dataframe por nombre
     MateriasXProfesor.sort_values("Nombre", axis = 0, ascending = True,
                  inplace = True, na_position ='last') 
-    #print(MateriasXProfesor)
     return MateriasXProfesor[[ 'Nombre','IDMateria','Materia']]
