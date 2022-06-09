@@ -1,4 +1,4 @@
-IDGrupo;Periodo;Horario;Activo;Materias;Profesores
+IDGrupo;Periodo;Horario;Activo;IDMaterias;IDProfesores
 1;2020;mañan;0;1,5,9,2,6,10,3,7,11,4,8,12;P1,P3,P9,P2,P10,P4,P5,P8,P9,P6,P3,P11
 2;2020;tarde;0;1,5,9,2,6,10,3,7,11,4,8,12;P12,P8,P11,P7,P3,P9,P6,P10,P4,P1,P8,P9
 3;2020;noche;0;1,5,9,2,6,10,3,7,11,4,8,12;P7,P10,P4,P1,P8,P11,P2,P3,P9,P5,P10,P4
