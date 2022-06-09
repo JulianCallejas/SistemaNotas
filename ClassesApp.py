@@ -1,5 +1,59 @@
 #Modulo para crear las diferentes classes a utilizar en la aplicacion
 
+class Materia:
+    #Clase asociada a la entidad Materias   
+  
+    def __init__(self, IDMater:int, Materi:str, Cic:int, Credi:int) -> None:
+        '''
+        Args:
+            IDMater (int): Id de la Materia de estudio
+            Materi (str): Nombres de la Materia de estudio
+            Cic (int): Ciclo al que pertenece la materia entre 1 y 4
+            Credi (int): Cantidad de creditos
+        '''
+
+        self.IDMateria = IDMater
+        self.Materia = Materi
+        self.Ciclo = Cic
+        self.Creditos = Credi
+
+    '''
+    Getters
+    '''
+
+    '''
+    Setters
+    '''
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+class Profesor:
+    '''Clase asociada a la entidad Materias
+    '''
+  
+    def __init__(self, IDProf:str, Nombr:str, Materi:list) -> None:
+        '''
+        Args:
+            IDProf (str): Id del profesor inicia con la letra P y luego un numero consecutivo
+            Nombr (str): Nombres y Apellidos del profesor
+            Materi (list): Lista con codigos de materias que dicta el profesor
+        '''
+
+        self.IDProfesor = IDProf
+        self.Nombre = Nombr
+        self.Materias = Materi
+        
+
+    '''
+    Getters
+    '''
+
+    '''
+    Setters
+    '''
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 class Estudiante:
     """Clase asociada a la entidad estudiante
     
@@ -9,9 +63,8 @@ class Estudiante:
     Esta es la forma más cercana de realizar encapsulamiento en python
     """
     
-    def __init__(self, id:int, nombres:str, apellidos:str, email:str, grupo:int) -> None:
+    def __init__(self, IDEstudiante:int, nombres:str, apellidos:str, email:str, grupo:int) -> None:
         """Constructor de la clase estudiante que recibe, id, nombres, apellidos, email y grupo
-
         Args:
             id (int): Id del estudiante
             nombres (str): Nombres del estudiante
@@ -19,7 +72,7 @@ class Estudiante:
             email (str): Email del estudiante
             grupo (int): Grupo del estudiante
         """
-        self.__id = id
+        self._IDEstudiante = IDEstudiante
         self.__nombres = nombres
         self.__apellidos = apellidos
         self.__email = email
@@ -36,18 +89,16 @@ class Estudiante:
     '''
     
     @property
-    def id(self)->int:
+    def IDEstudiante(self)->int:
         """Retorna la id del estudiante
-
         Returns:
             int: la id del estudiante
         """
-        return self.__id
+        return self._IDEstudiante
     
     @property
     def nombres(self)->str:
         """Retorna los nombres del estudiante
-
         Returns:
             str: Los nombres del estudiante
         """
@@ -56,7 +107,6 @@ class Estudiante:
     @property
     def apellidos(self)->str:
         """Retorna los apellidos del estudiante
-
         Returns:
             str: Los apellidos del estudiante
         """
@@ -65,7 +115,6 @@ class Estudiante:
     @property
     def email(self)->str:
         """Retorna el correo del estudiante
-
         Returns:
             str: El correo del estudiante
         """
@@ -74,7 +123,6 @@ class Estudiante:
     @property
     def grupo(self)->int:
         """Retorna el grupo al que pertenece el estudiante
-
         Returns:
             int: El grupo al que pertenece el estudiante
         """
@@ -92,7 +140,6 @@ class Estudiante:
     @nombres.setter
     def nombres(self,nombres:str)->None:
         """Actualiza el nombre del estudiante
-
         Args:
             nombres (str): El nuevo nombre del estudiante
         """
@@ -101,7 +148,6 @@ class Estudiante:
     @apellidos.setter
     def apellidos(self, apellidos:str )-> None:
         """Actualiza los apellidos del estudiante
-
         Args:
             apellidos (str): Los nuevos apellidos del estudiante
         """
@@ -110,7 +156,6 @@ class Estudiante:
     @email.setter
     def email(self, email:str )-> None:
         """Actualiza el correo del estudiante
-
         Args:
             email (str): El nuevo correo del estudiante
         """
@@ -119,18 +164,28 @@ class Estudiante:
     @grupo.setter
     def grupo(self, grupo:str )-> None:
         """Actualiza el grupo del estudiante
-
         Args:
             grupo (str): El nuevo grupo del estudiante
         """
         self.__grupo = grupo 
 
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
 class Grupo:
     """Clase asociada a la entidad grupo
     """
   
-    def __init__(self, id:int, periodo:int, horario:str, activo:int, materias:list, profesores:list) -> None:
-        self.__id = id
+    def __init__(self, idgrupo:int, periodo:int, horario:str, activo:int, materias:list, profesores:list) -> None:
+        '''
+        Args:
+        idgrupo (int): Id del grupo
+        periodo (int): año de estudio
+        horario (str): Franja horaria de estudio
+        activo (int):  Estado del grupo: 1 activo / 0 inactivo
+        materias (list): Lista de materias a estudiar
+        profesores (list): Lista de materias profesores en el mismo orden de las materias
+        '''
+        self._IDGrupo = idgrupo
         self.__periodo = periodo
         self.__horario = horario
         self.__activo = activo
@@ -142,18 +197,16 @@ class Grupo:
     '''
     
     @property
-    def id(self)->int:
+    def IDGrupo(self)->int:
         """Retorna la id del grupo
-
         Returns:
             int: la id del grupo
         """
-        return self.__id
+        return self._IDGrupo
 
     @property
     def periodo(self)->int:
         """Retorna el periodo del grupo
-
         Returns:
             int: El periodo del grupo
         """
@@ -162,7 +215,6 @@ class Grupo:
     @property
     def horario(self)->str:
         """Retorna el horario del grupo
-
         Returns:
             str: El horario del grupo
         """
@@ -171,7 +223,6 @@ class Grupo:
     @property
     def activo(self)->int:
         """Retorna si el grupo esta activo o no
-
         Returns:
             int: 1 si el grupo está activo, 0 si no lo está 
         """
@@ -180,7 +231,6 @@ class Grupo:
     @property
     def materias(self)->list:
         """Retorna la lista de materias del grupo
-
         Returns:
             list: La lista de materias del grupo
         """
@@ -189,7 +239,6 @@ class Grupo:
     @property
     def profesores(self)->list:
         """Retorna la lista de profesores del grupo
-
         Returns:
             list: La lista de profesores del grupo
         """
@@ -202,7 +251,6 @@ class Grupo:
     @periodo.setter
     def periodo(self,periodo:int)->None:
         """Actualiza el periodo del grupo
-
         Args:
             periodo (int): El nuevo periodo del grupo
         """
@@ -212,7 +260,6 @@ class Grupo:
     @horario.setter
     def horario(self,horario:str)->None:
         """Actualiza el horario del grupo
-
         Args:
             horario (str): El nuevo horario del grupo
         """
@@ -221,7 +268,6 @@ class Grupo:
     @activo.setter
     def activo(self, activo:int)->None:
         """Actualiza el estado de vigencia del grupo
-
         Args:
             activo (int): El nuevo estado de vigencia del grupo (activo:1, inactivo:0)
         """
@@ -230,7 +276,6 @@ class Grupo:
     @materias.setter
     def materias(self, materias:list)->None:
         """Actualiza la lista de materias del grupo
-
         Args:
             materias (list): La lista de materias del grupo
         """
@@ -239,8 +284,8 @@ class Grupo:
     @profesores.setter
     def profesores(self, profesores:list)->None:
         """Actualiza la lista de profesores del grupo
-
         Args:
             profesores (list): La lista de profesores del grupo
         """
         self.__profesores=profesores
+#------------------------------------------------------------------------------------------------------------------------------------------------
