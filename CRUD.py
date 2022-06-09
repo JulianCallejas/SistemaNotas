@@ -61,7 +61,6 @@ def CargaEstudiantesCSV():
 def CargaGruposCSV():
     try:
         df1 = pd.read_csv("Grupos.csv",dtype=str,sep=';', index_col = "IDGrupo")
-        print(df1)
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -101,8 +100,3 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
                  inplace = True, na_position ='last') 
     #print(MateriasXProfesor)
     return MateriasXProfesor[[ 'Nombre','Materia','IDMateria']]
-
-df,f = CargaProfesoresCSV()
-df2,g = CargaMateriasCSV()    
-consultaMateriasXProfesor(df,df2)    
-    
