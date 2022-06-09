@@ -4,7 +4,7 @@ import pandas as pd
 def CargaNotasCSV():
     # Leyendo archivo csv
     try:
-        df1 = pd.read_csv("Notas.csv",dtype=str,sep = ';', index_col = "IdNota")
+        df1 = pd.read_csv("Notas.csv",dtype=str,sep = ';')
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -18,7 +18,7 @@ def CargaNotasCSV():
 
 def CargaMateriasCSV():
     try:
-        df1 = pd.read_csv("Materias.csv",dtype=str,sep = ';', index_col = "IDMateria")
+        df1 = pd.read_csv("Materias.csv",dtype=str,sep = ';')
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -32,7 +32,7 @@ def CargaMateriasCSV():
 
 def CargaProfesoresCSV():
     try:
-        df1 = pd.read_csv("Profesores.csv",dtype=str,sep=';', index_col = "IDProfesor")
+        df1 = pd.read_csv("Profesores.csv",dtype=str,sep=';')
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -46,7 +46,7 @@ def CargaProfesoresCSV():
 
 def CargaEstudiantesCSV():
     try:
-        df1 = pd.read_csv("Estudiantes.csv",dtype=str,sep=';', index_col = "IDEstudiante")
+        df1 = pd.read_csv("Estudiantes.csv",dtype=str,sep=';')
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -60,7 +60,7 @@ def CargaEstudiantesCSV():
 
 def CargaGruposCSV():
     try:
-        df1 = pd.read_csv("Grupos.csv",dtype=str,sep=';', index_col = "IDGrupo")
+        df1 = pd.read_csv("Grupos.csv",dtype=str,sep=';')
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -71,24 +71,43 @@ def CargaGruposCSV():
     except Exception:
         return "Alguna otra Exepcion", 0  
     
+    '''
+    Args:
+        df:  DataFrame tblProfesores
+        df:  DataFrame tblMaterias
+        IDProf: Si se desea filtrar por profesor se ingresa el IDProfesor
+        IDMate: Si se desea filtrar por materia se ingresa el IDMateria
+    '''
+
+
 def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str = 0, IDMate:str = 0 ):
-    #Se llaman las funciones para cargar las tablas
+    '''
+    Args:
+        df:  DataFrame tblProfesores
+        df2:  DataFrame tblMaterias
+        IDProf: Si se desea filtrar por profesor se ingresa el IDProfesor
+        IDMate: Si se desea filtrar por materia se ingresa el IDMateria
+    '''
 
     # Dividir (explotar) entrada de cadena de marco de datos de pandas en filas separadas
     # Dataframe.assign()El método asigna nuevas columnas a un DataFrame, 
     # devolviendo un nuevo objeto (una copia) con las nuevas columnas agregadas a las originales.
     # Las columnas existentes que se reasignan se sobrescribirán.
     # Ejemplo: Asigne una nueva columna llamada Materia
+    
     MateriasXProfesor =df.assign(Materia=df.IDMateria.str.split(",")).explode('Materia')
+    
     if IDMate !=0:
         MateriasXProfesor = MateriasXProfesor[MateriasXProfesor.Materia == IDMate]
     #Se define cuales van a ser las llaves para hacer la union en cada tabla
+    MateriasXProfesor["IDMateria"] =  MateriasXProfesor['Materia']
     MateriasXProfesor = MateriasXProfesor.set_index('Materia')
+    
     df2 = df2.set_index('IDMateria')
 
     #Se realiza la union de las dos tablas
     MateriasXProfesor = pd.merge(MateriasXProfesor, df2, left_index=True, right_index=True)
-   
+
     #print(MateriasXProfesor)
     # Haciendo una consulta de un profesor por la llave IDProfesor
     if IDProf !=0:
@@ -99,4 +118,4 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
     MateriasXProfesor.sort_values("Nombre", axis = 0, ascending = True,
                  inplace = True, na_position ='last') 
     #print(MateriasXProfesor)
-    return MateriasXProfesor[[ 'Nombre','Materia','IDMateria']]
+    return MateriasXProfesor[[ 'Nombre','IDMateria','Materia']]
