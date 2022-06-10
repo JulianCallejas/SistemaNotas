@@ -3,13 +3,13 @@
 class Materia:
     #Clase asociada a la entidad Materias   
   
-    def __init__(self, IDMater:int, Materi:str, Cic:int, Credi:int) -> None:
+    def __init__(self, Materi:str, Cic:int, Credi:int, IDMater:int = 0) -> None:
         '''
         Args:
-            IDMater (int): Id de la Materia de estudio
             Materi (str): Nombres de la Materia de estudio
             Cic (int): Ciclo al que pertenece la materia entre 1 y 4
             Credi (int): Cantidad de creditos
+            IDMater (int): Id de la Materia de estudio
         '''
 
         self.IDMateria = IDMater
@@ -30,12 +30,12 @@ class Profesor:
     '''Clase asociada a la entidad Materias
     '''
   
-    def __init__(self, IDProf:str, Nombr:str, Materi:list) -> None:
+    def __init__(self, Nombr:str, Materi:list, IDProf:str = 0) -> None:
         '''
         Args:
-            IDProf (str): Id del profesor inicia con la letra P y luego un numero consecutivo
             Nombr (str): Nombres y Apellidos del profesor
             Materi (list): Lista con codigos de materias que dicta el profesor
+            IDProf (str): Id del profesor inicia con la letra P y luego un numero consecutivo
         '''
 
         self.IDProfesor = IDProf
@@ -63,14 +63,14 @@ class Estudiante:
     Esta es la forma más cercana de realizar encapsulamiento en python
     """
     
-    def __init__(self, IDEstudiante:int, nombres:str, apellidos:str, email:str, grupo:int) -> None:
+    def __init__(self, nombres:str, apellidos:str, email:str, grupo:int, IDEstudiante:int = 0) -> None:
         """Constructor de la clase estudiante que recibe, id, nombres, apellidos, email y grupo
         Args:
-            id (int): Id del estudiante
             nombres (str): Nombres del estudiante
             apellidos (str): Apellidos del estudiante
             email (str): Email del estudiante
             grupo (int): Grupo del estudiante
+            id (int): Id del estudiante
         """
         self._IDEstudiante = IDEstudiante
         self.__nombres = nombres
@@ -175,15 +175,15 @@ class Grupo:
     """Clase asociada a la entidad grupo
     """
   
-    def __init__(self, idgrupo:int, periodo:int, horario:str, activo:int, materias:list, profesores:list) -> None:
+    def __init__(self, periodo:int, horario:str, activo:int, materias:list, profesores:list, idgrupo:int = 0) -> None:
         '''
         Args:
-        idgrupo (int): Id del grupo
         periodo (int): año de estudio
         horario (str): Franja horaria de estudio
         activo (int):  Estado del grupo: 1 activo / 0 inactivo
         materias (list): Lista de materias a estudiar
         profesores (list): Lista de materias profesores en el mismo orden de las materias
+        idgrupo (int): Id del grupo
         '''
         self._IDGrupo = idgrupo
         self.__periodo = periodo
