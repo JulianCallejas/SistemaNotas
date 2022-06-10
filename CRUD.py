@@ -1,5 +1,7 @@
 #Modulo para las funciones de creacion, lectura, edicion y eliminacion de la información
 import pandas as pd
+from pandas.core.frame import DataFrame
+from pandas.core.indexes.base import Index
 #------------------Se crean las funciones para cargar datos-------------------------------------
 def CargaNotasCSV():
     # Leyendo archivo csv
@@ -110,7 +112,7 @@ def ReiniciarDB():
 
 #------------------ Se crean las funciones para Consultar Informacion -------------------------------------
 
-def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str = 0, IDMate:str = 0 ):
+def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str = 0, IDMate:str = 0 )-> DataFrame:
     '''
     Args:
         df:  DataFrame tblProfesores
@@ -125,10 +127,11 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
     # Las columnas existentes que se reasignan se sobrescribirán.
     # Ejemplo: Asigne una nueva columna llamada Materia
     
-    MateriasXProfesor =df.assign(Materia=df.IDMateria.str.split(",")).explode('Materia')
+    df = df[df['IDProfesor'] != 'P0']
+    MateriasXProfesor = df.assign(Materia=df.IDMateria.str.split(",")).explode('Materia')
     
     if IDMate !=0:
-        MateriasXProfesor = MateriasXProfesor[MateriasXProfesor.Materia == IDMate]
+        MateriasXProfesor = MateriasXProfesor[MateriasXProfesor.Materia == str(IDMate)]
     #Se define cuales van a ser las llaves para hacer la union en cada tabla
     MateriasXProfesor["IDMateria"] =  MateriasXProfesor['Materia']
     MateriasXProfesor = MateriasXProfesor.set_index('Materia')
@@ -147,4 +150,19 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
     # Ordenando dataframe por nombre
     MateriasXProfesor.sort_values("Nombre", axis = 0, ascending = True,
                  inplace = True, na_position ='last') 
+    #print(MateriasXProfesor)
     return MateriasXProfesor[[ 'Nombre','IDMateria','Materia']]
+
+
+def consultaMateriasXCiclo ( TblMaterias : pd.DataFrame, ciclo:str = 0 )-> DataFrame: 
+    '''
+    Args:
+        df:  DataFrame tblMaterias
+        ciclo: string con el numero del ciclo
+    '''
+    if ciclo !=0:
+        TblMaterias = TblMaterias[TblMaterias['Ciclo'] == str(ciclo)]
+    
+    TblMaterias = TblMaterias.sort_values(by  = 'Ciclo')
+    TblMaterias = TblMaterias.set_index(['Ciclo','IDMateria',])
+    return TblMaterias
