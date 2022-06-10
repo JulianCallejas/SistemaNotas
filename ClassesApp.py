@@ -30,17 +30,17 @@ class Profesor:
     '''Clase asociada a la entidad Materias
     '''
   
-    def __init__(self, IDProf:str, Nombr:str, idMateri:list) -> None:
+    def __init__(self, IDProf:str, Nombr:str, Materi:list) -> None:
         '''
         Args:
             IDProf (str): Id del profesor inicia con la letra P y luego un numero consecutivo
             Nombr (str): Nombres y Apellidos del profesor
-            idMateri (list): Lista con codigos de materias que dicta el profesor
+            Materi (list): Lista con codigos de materias que dicta el profesor
         '''
 
         self.IDProfesor = IDProf
         self.Nombre = Nombr
-        self.IDMaterias = idMateri
+        self.Materias = Materi
         
 
     '''
