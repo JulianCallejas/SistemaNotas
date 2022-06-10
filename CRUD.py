@@ -166,3 +166,6 @@ def consultaMateriasXCiclo ( TblMaterias : pd.DataFrame, ciclo:str = 0 )-> DataF
     TblMaterias = TblMaterias.sort_values(by  = 'Ciclo')
     TblMaterias = TblMaterias.set_index(['Ciclo','IDMateria',])
     return TblMaterias
+
+def existeID (dFIngreso, nomCol, ID) -> bool:
+    return ID in dFIngreso[nomCol].values
