@@ -169,3 +169,42 @@ def consultaMateriasXCiclo ( TblMaterias : pd.DataFrame, ciclo:str = 0 )-> DataF
 
 def existeID (dFIngreso, nomCol, ID) -> bool:
     return ID in dFIngreso[nomCol].values
+#------------------ CONSULTA DE ESTUDIANTES POR GRUPOS -----------------------
+
+def consultaEstudiantesXGrupo( TblEstudiantes : pd.DataFrame, TblGrupo : pd.DataFrame ) -> DataFrame :
+    TblEstudiantes = TblEstudiantes.set_index('IDGrupo')
+    TblGrupo = TblGrupo.set_index('IDGrupo')
+    EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_index=True, right_index=True)
+    EstudiantesXGrupo  = EstudiantesXGrupo.sort_values(by  = 'Apellidos')
+    return(EstudiantesXGrupo)
+    # Llamada a la funcion
+    #print(consultaEstudiantesXGrupo(CargaEstudiantesCSV,CargaGruposCSV))
+
+#------------------ FIN CONSULTA DE ESTUDIANTES POR GRUPOS -----------------------
+
+#------------------ CONSULTA DE ESTUDIANTES POR PROFESOR -----------------------
+#Se puede consultar por el IDEstudiante en particular
+#Se puede consultar Por IDProfe de un Profesor en particular para saber que estudiantes tiene asignados para dar clase 
+#Sacar el listado completo de estudiantes x profesor 
+
+
+def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFrame, TblProfesores:pd.DataFrame, IDStu:str = 0, IDProfe:str = 0)->DataFrame:
+    EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_on='IDGrupo', right_on='IDGrupo')
+    EstudiantesXGrupo = EstudiantesXGrupo.assign(IDProfe=EstudiantesXGrupo.IDProfesores.str.split(",")).explode('IDProfe')
+    EstudiantesXGrupo = pd.merge(left=EstudiantesXGrupo,right=TblProfesores, left_on='IDProfe', right_on='IDProfesor')
+    EstudiantesXGrupo.rename(columns={'Nombre':'Nombre Profesor','Nombres':'Nombre Estudiante'},inplace=True) 
+    EstudiantesXGrupo = EstudiantesXGrupo [['IDEstudiante','Nombre Estudiante','Apellidos','Nombre Profesor','IDGrupo','IDProfe']]
+    if IDStu != 0:
+        EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDEstudiante'] == IDStu]
+        EstudiantesXGrupo = EstudiantesXGrupo.set_index(['IDEstudiante','Nombre Estudiante'])
+    if IDProfe !=0:
+        EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDProfe'] == IDProfe] 
+        EstudiantesXGrupo = EstudiantesXGrupo.set_index(['Nombre Profesor','IDProfe','IDGrupo'])   
+    return EstudiantesXGrupo
+# Llamada a la funcion
+#print(consultaEstudiantesXProfesor(CargaEstudiantesCSV,CargaGruposCSV,CargaProfesoresCSV,IDProfe=0,IDStu=0))
+
+#------------------ FIN CONSULTA DE ESTUDIANTES POR PROFESOR -----------------------
+
+
+
