@@ -70,18 +70,18 @@ def menuConsultar():
     return opciones
 
 #Funcion para imprimir en pantalla el subMenu Consultar Materias (0,2,1)
-def ConsultarMaterias():
+def menuConsultarMaterias():
     limpiapantalla()
     opciones = 6
     print(Version)
     print(" ---------------------------------------------------------- ")
-    print("|               Consultar materias                         |")
+    print("|               Consultar Materias                         |")
     print(" ---------------------------------------------------------- ")
     print("|                                                          |")
     print("| 1. Listado de materias                                   |")
     print("| 2. Materias por ciclo                                    |")
     print("| 3. Profesores por materia                                |")
-    print("| 4. Estudiantes por materia                               |")
+    print("| 4.                                                       |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
@@ -139,7 +139,7 @@ def InformeProfesoresXMateria(informe, tblProfesores, tblMaterias ):
     return opciones
 
  #Funcion para imprimir en pantalla el subMenu Consultar Profesores (0,2,2)
-def ConsultarProfesores():
+def menuConsultarProfesores():
     limpiapantalla()
     opciones = 6
     print(Version)
@@ -148,9 +148,9 @@ def ConsultarProfesores():
     print(" ---------------------------------------------------------- ")
     print("|                                                          |")
     print("| 1. Listado de Profesores                                 |")
-    print("| 2. Profesores por ciclo                                  |")
-    print("| 3. Materias de profesores                                |")
-    print("| 4. Estudiantes de profesores                             |")
+    print("| 2. Grupos activos por profesor                           |")
+    print("| 3. Materias por profesor                                 |")
+    print("| 4. Estudiantes por profesor                              |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
@@ -159,7 +159,7 @@ def ConsultarProfesores():
     return opciones
 
  #Funcion para imprimir en pantalla el subMenu Consultar Grupos (0,2,3)
-def ConsultarGrupos():
+def menuConsultarGrupos():
     limpiapantalla()
     opciones = 4
     print(Version)
@@ -167,8 +167,10 @@ def ConsultarGrupos():
     print("|                   Consultar Grupos                       |")
     print(" ---------------------------------------------------------- ")
     print("|                                                          |")
-    print("| 1. Listado de Grupos                                     |")
-    print("| 2. Estudiantes por grupos                                |")
+    print("| 1. Listado de grupos                                     |")
+    print("| 2. Listado detallado de grupos activos                   |")
+    print("| 3. Estudiantes por grupo                                 |")
+    print("| 4. Profesores por grupo                                  |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
@@ -177,24 +179,45 @@ def ConsultarGrupos():
     return opciones
 
  #Funcion para imprimir en pantalla el subMenu Consultar Estudiantes (0,2,4)
-def ConsultarEstudiantes():
+def menuConsultarEstudiantes():
     limpiapantalla()
     opciones = 6
     print(Version)
     print(" ---------------------------------------------------------- ")
-    print("|                   Consultar estudiantes                  |")
+    print("|                Consultar Estudiantes                     |")
     print(" ---------------------------------------------------------- ")
     print("|                                                          |")
-    print("| 1. Listado general de Estudantes                         |")
-    print("| 2. Listado de Estudiantes por materia                    |")
-    print("| 3. Listado de estudiantes por grupo                      |")
-    print("| 4. Listado de estudantes con notas aprobad               |")
+    print("| 1. Listado de Estudantes                                 |")
+    print("| 2. Listado de estudiantes por grupo                      |")
+    print("| 3. Listado de notas por estudiante                       |")
+    print("| 4. Listado de promedios por estudiante                   |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
+
+ #Funcion para imprimir en pantalla el subMenu Consultar Notas (0,2,5)
+def menuConsultarNotas():
+    limpiapantalla()
+    opciones = 6
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                   Consultar Notas                        |")
+    print(" ---------------------------------------------------------- ")
+    print("|                                                          |")
+    print("| 1. Matriz general de notas                               |")
+    print("| 2. Listado de notas por grupo                            |")
+    print("| 3. Listado de notas por estudiante                       |")
+    print("| 4. Listado de promedios ciclo por estudiante             |")
+    print("| 0. Volver al menu anterior                               |")
+    print("| 9. Volver al menu principal                              |")
+    print("|                                                          |")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el número de la acción que desea realizar: ")
+    return opciones
+
 
 #Funcion para imprimir en pantalla el Menu Modificar (0,3)
 def menuModificar():
@@ -259,14 +282,15 @@ def menuFallaCarga():
 DicMenu = {(0,)   :     menuInicial,
            (0,1)  :     menuAgregar,     #0 es el menu principal y 1 es la opcion 1 Agregar del menu principal por tanto la llave de esta funcion es (0,1)
            (0,2)  :     menuConsultar,
-           (0,2,1) :    ConsultarMaterias,
-           (0,2,2) :    ConsultarProfesores,
-           (0,2,3) :    ConsultarGrupos,
-           (0,2,4) :    ConsultarEstudiantes,
-           (0,3) :      menuModificar,
-           (0,4)  :     menuEliminar,
+           (0,2,1) :    menuConsultarMaterias,
           #(0,2,1,1):   (ic.InformeListadoMaterias,tblMaterias),
           #(0,2,1,2):   (ic.InformeMateriasXCiclo,crud.consultaMateriasXCiclo,tblMaterias),
           #(0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor)
-
+           (0,2,2) :    menuConsultarProfesores,
+           (0,2,3) :    menuConsultarGrupos,
+           (0,2,4) :    menuConsultarEstudiantes,
+           (0,2,5) :    menuConsultarNotas,
+           (0,3)   :    menuModificar,
+           (0,4)   :    menuEliminar,
+           
     }
