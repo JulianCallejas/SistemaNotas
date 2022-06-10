@@ -172,9 +172,6 @@ def existeID (dFIngreso, nomCol, ID) -> bool:
 #------------------ CONSULTA DE ESTUDIANTES POR GRUPOS -----------------------
 
 def consultaEstudiantesXGrupo( TblEstudiantes : pd.DataFrame, TblGrupo : pd.DataFrame ) -> DataFrame :
-
-    TblEstudiantes, f = CargaEstudiantesCSV()
-    TblGrupo, d = CargaGruposCSV()
     TblEstudiantes = TblEstudiantes.set_index('IDGrupo')
     TblGrupo = TblGrupo.set_index('IDGrupo')
     EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_index=True, right_index=True)
@@ -192,9 +189,6 @@ def consultaEstudiantesXGrupo( TblEstudiantes : pd.DataFrame, TblGrupo : pd.Data
 
 
 def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFrame, TblProfesores:pd.DataFrame, IDStu:str = 0, IDProfe:str = 0)->DataFrame:
-    TblEstudiantes, f = CargaEstudiantesCSV()
-    TblGrupo, d = CargaGruposCSV()
-    TblProfesores,c = CargaProfesoresCSV()
     EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_on='IDGrupo', right_on='IDGrupo')
     EstudiantesXGrupo = EstudiantesXGrupo.assign(IDProfe=EstudiantesXGrupo.IDProfesores.str.split(",")).explode('IDProfe')
     EstudiantesXGrupo = pd.merge(left=EstudiantesXGrupo,right=TblProfesores, left_on='IDProfe', right_on='IDProfesor')
