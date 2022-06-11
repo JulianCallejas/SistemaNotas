@@ -2,9 +2,10 @@
 import pandas as pd
 from pandas.core.frame import DataFrame
 from pandas.core.indexes.base import Index
-
 # Se importan las clases personalizadas
 from ClasesApp import *
+pd.options.display.max_rows = 100  #Imprime todas las filas del DataFrame
+pd.options.display.max_columns = 100 #Imprime todas las columnas del DataFrame
 
 # Se declaran las listas de objetos que seran globales para ser usados en distintos metodos
 lista_materias = []
@@ -148,7 +149,29 @@ def CargaGruposCSV():
     except Exception:
         return "Alguna otra Exepcion", 0  
 
+def prueba_carga_objeto():
+    
+    CargaMateriasCSV()
+    CargaProfesoresCSV()
+    CargaGruposCSV()
+    CargaEstudiantesCSV()
+    CargaNotasCSV()
+    CargaGruposCSV()
+    #print([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]])
+    #print ([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]][0])
+    print(list(map(str,lista_notas)))
+      
 #------------------Se crean las funciones para Modificar Archivos CSV-------------------------------------
+
+def existeID (dFIngreso, nomCol, ID) -> bool:
+    '''
+    Args:
+        dFIngreso:  DataFrame a comsultar
+        nomCol: string con el nombre de la columna a consultar
+        ID: valor para verificar si tiene duplicados en la columna
+    '''
+    return ID in dFIngreso[nomCol].values
+
 
 def ReiniciarDB():
     reiniciado = 0
@@ -216,7 +239,6 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
     #Se realiza la union de las dos tablas
     MateriasXProfesor = pd.merge(MateriasXProfesor, df2, left_index=True, right_index=True)
 
-    #print(MateriasXProfesor)
     # Haciendo una consulta de un profesor por la llave IDProfesor
     if IDProf !=0:
         MateriasXProfesor = MateriasXProfesor[MateriasXProfesor['IDProfesor'] == IDProf]
@@ -242,18 +264,90 @@ def consultaMateriasXCiclo ( TblMaterias : pd.DataFrame, ciclo:str = 0 )-> DataF
     TblMaterias = TblMaterias.set_index(['Ciclo','IDMateria',])
     return TblMaterias
 
+#------------------ CONSULTA DE ESTUDIANTES POR GRUPOS -----------------------
 
-def prueba_carga_objeto():
+def consultaEstudiantesXGrupo( TblEstudiantes : pd.DataFrame, TblGrupo : pd.DataFrame ) -> DataFrame :
+    '''
+    Args:
+        TblEstudiantes:  Ingrese el DataFrame de estudiantes
+        TblGrupo: Ingrese el DataFrame de grupo
+    '''
+    TblEstudiantes = TblEstudiantes.set_index('IDGrupo')
+    TblGrupo = TblGrupo.set_index('IDGrupo')
+
+    EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_index=True, right_index=True)
+    EstudiantesXGrupo  = EstudiantesXGrupo.sort_values(by  = 'Apellidos')
+    return(EstudiantesXGrupo)
+    # Llamada a la funcion
+    #print(consultaEstudiantesXGrupo(CargaEstudiantesCSV,CargaGruposCSV))
+
+#------------------ FIN CONSULTA DE ESTUDIANTES POR GRUPOS -----------------------
+
+#------------------ CONSULTA DE ESTUDIANTES POR PROFESOR -----------------------
+#Se puede consultar por el IDEstudiante en particular
+#Se puede consultar Por IDProfe de un Profesor en particular para saber que estudiantes tiene asignados para dar clase 
+#Sacar el listado completo de estudiantes x profesor 
+
+
+def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFrame, TblProfesores:pd.DataFrame, IDStu:str = 0, IDProfe:str = 0)->DataFrame:
+    EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_on='IDGrupo', right_on='IDGrupo')
+    EstudiantesXGrupo = EstudiantesXGrupo.assign(IDProfe=EstudiantesXGrupo.IDProfesores.str.split(",")).explode('IDProfe')
+    EstudiantesXGrupo = pd.merge(left=EstudiantesXGrupo,right=TblProfesores, left_on='IDProfe', right_on='IDProfesor')
+    EstudiantesXGrupo.rename(columns={'Nombre':'Nombre Profesor','Nombres':'Nombre Estudiante'},inplace=True) 
+    EstudiantesXGrupo = EstudiantesXGrupo [['IDEstudiante','Nombre Estudiante','Apellidos','Nombre Profesor','IDGrupo','IDProfe']]
+    if IDStu != 0:
+        EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDEstudiante'] == IDStu]
+        EstudiantesXGrupo = EstudiantesXGrupo.set_index(['IDEstudiante','Nombre Estudiante'])
+    if IDProfe !=0:
+        EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDProfe'] == IDProfe] 
+        EstudiantesXGrupo = EstudiantesXGrupo.set_index(['Nombre Profesor','IDProfe','IDGrupo'])   
+    return EstudiantesXGrupo
+
+# Llamada a la funcion
+#print(consultaEstudiantesXProfesor(CargaEstudiantesCSV,CargaGruposCSV,CargaProfesoresCSV,IDProfe=0,IDStu=0))
+
+#------------------ FIN CONSULTA DE ESTUDIANTES POR PROFESOR -----------------------
+
+#------------------ INICIO CONSULTA DE NOTAS ESTUDIANTES ---------------------------
+
+#Se puede sacar el listado completo de Todas las notas por estudiantes
+#Se puede sacar el listado de notas de estudiante en particular
+#Se puede sacar el listado de los estudiantes que sacaron determinada nota
+
+def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMaterias:pd.DataFrame, IDEstud:str = 0, Nota = 0  ) -> DataFrame:
     
-    CargaMateriasCSV()
-    CargaProfesoresCSV()
-    CargaGruposCSV()
-    CargaEstudiantesCSV()
-    CargaNotasCSV()
-    CargaGruposCSV()
-    #print([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]])
-    #print ([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]][0])
-    print(list(map(str,lista_notas)))
+    '''
+    Args:
+        TblEstudiantes:  DataFrame tabla estudiantes
+        TblNotas:        DataFrame tabla notas
+        TblMaterias:     DataFrame tabla materias
+        IDEstud :        String con el id de estudiante
+        Nota :           String con el numero de nota a consultar 
+    '''
+    NotasEstudiante = pd.merge(TblEstudiantes,TblNotas,left_on='IDEstudiante',right_on='IDEstudiante')
+    NotasEstudiante = pd.merge(NotasEstudiante, TblMaterias, left_on='IDMateria', right_on='IDMateria')
+    if IDEstud !=0: 
+        NotasEstudiante = NotasEstudiante[NotasEstudiante['IDEstudiante'] == IDEstud ]
+    if Nota !=0:
+        NotasEstudiante = NotasEstudiante[NotasEstudiante['Nota'] >= Nota]    
+    NotasEstudiante = NotasEstudiante.sort_values(by = 'Apellidos' )
+    NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota']]
+    return NotasEstudiante
+    #Llamada a la funcion
+    #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud=0, Nota=0))
+    
+#------------------ FIN CONSULTA DE NOTAS ESTUDIANTES    ---------------------------
 
 
+#------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
+
+def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
+    '''
+    Args:
+        tblMaterias:  Ingrese el DataFrame de materias
+    '''
+    diccionario = {}
+    for datos in DataFrame.values:
+        diccionario[datos[0]] = objeto(list(datos))
+    return diccionario
 

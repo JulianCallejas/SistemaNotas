@@ -64,15 +64,18 @@ continuar = True
 DicMenu = { (0,)   :     ic.menuInicial,
             (0,1)  :     ic.menuAgregar,     #0 es el menu principal y 1 es la opcion 1 Agregar del menu principal por tanto la llave de esta funcion es (0,1)
             (0,2)  :     ic.menuConsultar,
-            (0,2,1) :    ic.ConsultarMaterias,
-            (0,2,2) :    ic.ConsultarProfesores,
-            (0,2,3) :    ic.ConsultarGrupos,
-            (0,2,4) :    ic.ConsultarEstudiantes,
-            (0,3) :      ic.menuModificar,
-            (0,4)  :     ic.menuEliminar,
+            (0,2,1) :    ic.menuConsultarMaterias,
             (0,2,1,1):   (ic.InformeListadoMaterias,tblMaterias),
             (0,2,1,2):   (ic.InformeMateriasXCiclo,crud.consultaMateriasXCiclo,tblMaterias),
-            (0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias )
+            (0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
+            (0,2,2) :    ic.menuConsultarProfesores,
+            (0,2,2,1) :  (ic.InformeListadoProfesores, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
+            (0,2,3) :    ic.menuConsultarGrupos,
+            (0,2,4) :    ic.menuConsultarEstudiantes,
+            (0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
+            (0,2,5) :    ic.menuConsultarNotas,
+            (0,3) :      ic.menuModificar,
+            (0,4)  :     ic.menuEliminar,
 
 }
 
@@ -109,4 +112,5 @@ while continuar and cargado == 5 :
                 accion = accion + (seleccion,)
     except :
         input("Opcion Invalida")
-  
+    
+
