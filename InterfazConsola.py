@@ -159,6 +159,27 @@ def menuConsultarProfesores():
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
 
+#Funcion para imprimir Listado de Profesores (0,2,2,1)
+def InformeListadoProfesores(informe, tblProfesores, tblMaterias ):
+    limpiapantalla()
+    listado = informe(tblProfesores,tblMaterias).sort_values(by = ['Nombre','Materia'])
+    listado = listado.reset_index()
+    listado = listado.set_index(['IDProfesor','Nombre','Materia'])
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|               LISTADO DE PROFESORES POR MATERIA                     |")
+    print(" --------------------------------------------------------------------- ")
+    print(listado,"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+
+
+
  #Funcion para imprimir en pantalla el subMenu Consultar Grupos (0,2,3)
 def menuConsultarGrupos():
     limpiapantalla()
@@ -198,6 +219,26 @@ def menuConsultarEstudiantes():
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
+
+#Funcion para imprimir Lista de Estudiantes por Grupo (0,2,4,2)
+def InformeEstudiantesXGrupo(informe, tblEstudiantes, tblGrupos ):
+    limpiapantalla()
+    listado = informe(tblEstudiantes,tblGrupos)
+    listado = listado.reset_index()
+    listado = listado.sort_values(by = ['IDGrupo','Apellidos','Nombres'])
+    listado = listado.set_index(['IDGrupo','Apellidos','Nombres'])
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|               LISTADO DE ESTUDIANTES POR GRUPO                      |")
+    print(" --------------------------------------------------------------------- ")
+    print(listado["IDEstudiante"],"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
 
  #Funcion para imprimir en pantalla el subMenu Consultar Notas (0,2,5)
 def menuConsultarNotas():
@@ -276,29 +317,6 @@ def menuFallaCarga():
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
-    
-
-
-#Funcion para imprimir Lista de Estudiantes por Grupo (0,2,4,2)
-def InformeEstudiantesXGrupo(informe, tblEstudiantes, tblGrupos ):
-    limpiapantalla()
-    listado = informe(tblEstudiantes,tblGrupos)
-    listado = listado.reset_index()
-    listado = listado.sort_values(by = ['IDGrupo','Apellidos','Nombres'])
-    listado = listado.set_index(['IDGrupo','Apellidos','Nombres'])
-    opciones = 20
-    print(Version)
-    print(" --------------------------------------------------------------------- ")
-    print("|               LISTADO DE ESTUDIANTES POR GRUPO                      |")
-    print(" --------------------------------------------------------------------- ")
-    print(listado["IDEstudiante"],"\n")
-    print(" --------------------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                                          |")
-    print("| 9. Volver al menu principal                                         |")
-    print(" --------------------------------------------------------------------- ")
-    return opciones
-
-
 
 
 #Se crea un diccionario con la ruta y lista de las funciones de los menus para ser llamadas automaticamente
@@ -310,10 +328,12 @@ DicMenu = {(0,)   :     menuInicial,
           #(0,2,1,2):   (ic.InformeMateriasXCiclo,crud.consultaMateriasXCiclo,tblMaterias),
           #(0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor)
            (0,2,2) :    menuConsultarProfesores,
+          #(0,2,2,1) :  (ic.InformeListadoProfesores, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
            (0,2,3) :    menuConsultarGrupos,
            (0,2,4) :    menuConsultarEstudiantes,
+          #(0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
            (0,2,5) :    menuConsultarNotas,
            (0,3)   :    menuModificar,
            (0,4)   :    menuEliminar,
-           (0,2,4,2):   InformeEstudiantesXGrupo
+           
     }
