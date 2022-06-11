@@ -3,24 +3,31 @@
 class Materia:
     #Clase asociada a la entidad Materias   
   
-    def __init__(self, Materi:str, Cic:int, Credi:int, IDMater:int = 0) -> None:
+    def __init__(self, listadatos: list) -> None:
         '''
         Args:
-            Materi (str): Nombres de la Materia de estudio
-            Cic (int): Ciclo al que pertenece la materia entre 1 y 4
-            Credi (int): Cantidad de creditos
-            IDMater (int): Id de la Materia de estudio
+            listadatos: debe tener la informacion en el siguiente orden:
+            IDMateria (int): Id de la Materia de estudio
+            Materia (str): Nombres de la Materia de estudio
+            Ciclo (int): Ciclo al que pertenece la materia entre 1 y 4
+            Creditos (int): Cantidad de creditos
+            
         '''
+        self.IDMateria = listadatos[0]
+        self.Materia = listadatos[1]
+        self.Ciclo = listadatos[2]
+        self.Creditos = listadatos[3]
 
-        self.IDMateria = IDMater
-        self.Materia = Materi
-        self.Ciclo = Cic
-        self.Creditos = Credi
+
 
     '''
     Getters
     '''
-
+    def listadatos(self):
+        return [self.IDMateria,
+        self.Materia, 
+        self.Ciclo,
+        self.Creditos]
     '''
     Setters
     '''
@@ -30,17 +37,18 @@ class Profesor:
     '''Clase asociada a la entidad Materias
     '''
   
-    def __init__(self, Nombr:str, Materi:list, IDProf:str = 0) -> None:
+    def __init__(self, listadatos: list) -> None:
         '''
         Args:
-            Nombr (str): Nombres y Apellidos del profesor
-            Materi (list): Lista con codigos de materias que dicta el profesor
-            IDProf (str): Id del profesor inicia con la letra P y luego un numero consecutivo
+            listadatos: debe tener la informacion en el siguiente orden:
+                IDProf (str): Id del profesor inicia con la letra P y luego un numero consecutivo
+                Nombr (str): Nombres y Apellidos del profesor
+                Materi (list): Lista con codigos de materias que dicta el profesor
         '''
 
-        self.IDProfesor = IDProf
-        self.Nombre = Nombr
-        self.Materias = Materi
+        self.IDProfesor = listadatos[0]
+        self.Nombre = listadatos[1]
+        self.Materias = listadatos[2]
         
 
     '''
@@ -63,20 +71,22 @@ class Estudiante:
     Esta es la forma más cercana de realizar encapsulamiento en python
     """
     
-    def __init__(self, nombres:str, apellidos:str, email:str, grupo:int, IDEstudiante:int = 0) -> None:
+    def __init__(self, listadatos: list) -> None:
         """Constructor de la clase estudiante que recibe, id, nombres, apellidos, email y grupo
         Args:
+        listadatos: debe tener la informacion en el siguiente orden:    
+            idEstudiante (int): Id del estudiante
             nombres (str): Nombres del estudiante
             apellidos (str): Apellidos del estudiante
             email (str): Email del estudiante
             grupo (int): Grupo del estudiante
-            id (int): Id del estudiante
+            
         """
-        self._IDEstudiante = IDEstudiante
-        self.__nombres = nombres
-        self.__apellidos = apellidos
-        self.__email = email
-        self.__grupo = grupo
+        self._IDEstudiante = listadatos[0]
+        self.__nombres = listadatos[1]
+        self.__apellidos = listadatos[2]
+        self.__email = listadatos[3]
+        self.__grupo = listadatos[4]
 
     '''
     Getters
@@ -175,22 +185,23 @@ class Grupo:
     """Clase asociada a la entidad grupo
     """
   
-    def __init__(self, periodo:int, horario:str, activo:int, materias:list, profesores:list, idgrupo:int = 0) -> None:
+    def __init__(self, listadatos: list) -> None:
         '''
         Args:
-        periodo (int): año de estudio
-        horario (str): Franja horaria de estudio
-        activo (int):  Estado del grupo: 1 activo / 0 inactivo
-        materias (list): Lista de materias a estudiar
-        profesores (list): Lista de materias profesores en el mismo orden de las materias
-        idgrupo (int): Id del grupo
+        listadatos: debe tener la informacion en el siguiente orden:    
+            idgrupo (int): Id del grupo
+            periodo (int): año de estudio
+            horario (str): Franja horaria de estudio
+            activo (int):  Estado del grupo: 1 activo / 0 inactivo
+            materias (list): Lista de materias a estudiar
+            profesores (list): Lista de materias profesores en el mismo orden de las materias
         '''
-        self._IDGrupo = idgrupo
-        self.__periodo = periodo
-        self.__horario = horario
-        self.__activo = activo
-        self.__materias = materias
-        self.__profesores = profesores
+        self._IDGrupo = listadatos[0]
+        self.__periodo = listadatos[1]
+        self.__horario = listadatos[2]
+        self.__activo = listadatos[3]
+        self.__materias = listadatos[4]
+        self.__profesores = listadatos[5]
         
     '''
     Getters
