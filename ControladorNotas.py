@@ -5,15 +5,22 @@ import InterfazConsola as ic
 import ClassesApp as clapp
 
 #Realiza el proceso de cargue de informacion
+
+# Se reordena el cargue de los archivos para el cargue de la informacion en los objetos
+# esto es: primero materias, luego profesores, luego grupos, luego estudiantes y finalmente notas
 cargado = 0 #variable de control de cargue de archivos
 tblMaterias, carga = crud.CargaMateriasCSV()
 cargado += carga
+
 tblProfesores, carga = crud.CargaProfesoresCSV()
 cargado += carga
+
 tblGrupos, carga = crud.CargaGruposCSV()
 cargado += carga
+
 tblEstudiantes, carga = crud.CargaEstudiantesCSV()
 cargado += carga
+
 tblNotas, carga = crud.CargaNotasCSV()
 cargado += carga
 
