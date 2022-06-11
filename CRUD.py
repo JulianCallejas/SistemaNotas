@@ -138,7 +138,6 @@ def CargaEstudiantesCSV():
 def CargaGruposCSV():
     try:
         df1 = pd.read_csv("Grupos.csv",dtype=str,sep=';')
-        #crear_lista_objeto_grupos(df1)
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
