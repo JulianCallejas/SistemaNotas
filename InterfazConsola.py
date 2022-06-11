@@ -2,6 +2,8 @@
 #Modulo para crear las funciones de impresion por pantalla para el usuario
 import pandas as pd
 from os import system as dossystem  #añadida para limpiar consola
+dossystem('mode con: cols=120 lines=1500')
+
 Version = "SNApp V1.0"
 #Funcion para limpiar la pantalla cada vez que se abre un menu o un informe
 def limpiapantalla():
@@ -23,7 +25,7 @@ def menuInicial():
     print("| 2. Consultar información                                 |")
     print("| 3. Modificar información                                 |")
     print("| 4. Eliminar información                                  |")
-    print("| 99. Salir de la aplicación                                |")
+    print("| 99. Salir de la aplicación                               |")
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
@@ -81,7 +83,6 @@ def menuConsultarMaterias():
     print("| 1. Listado de materias                                   |")
     print("| 2. Materias por ciclo                                    |")
     print("| 3. Profesores por materia                                |")
-    print("| 4.                                                       |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
@@ -278,6 +279,28 @@ def menuFallaCarga():
     
 
 
+#Funcion para imprimir Lista de Estudiantes por Grupo (0,2,4,2)
+def InformeEstudiantesXGrupo(informe, tblEstudiantes, tblGrupos ):
+    limpiapantalla()
+    listado = informe(tblEstudiantes,tblGrupos)
+    listado = listado.reset_index()
+    listado = listado.sort_values(by = ['IDGrupo','Apellidos','Nombres'])
+    listado = listado.set_index(['IDGrupo','Apellidos','Nombres'])
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|               LISTADO DE ESTUDIANTES POR GRUPO                      |")
+    print(" --------------------------------------------------------------------- ")
+    print(listado["IDEstudiante"],"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+
+
+
 #Se crea un diccionario con la ruta y lista de las funciones de los menus para ser llamadas automaticamente
 DicMenu = {(0,)   :     menuInicial,
            (0,1)  :     menuAgregar,     #0 es el menu principal y 1 es la opcion 1 Agregar del menu principal por tanto la llave de esta funcion es (0,1)
@@ -292,5 +315,5 @@ DicMenu = {(0,)   :     menuInicial,
            (0,2,5) :    menuConsultarNotas,
            (0,3)   :    menuModificar,
            (0,4)   :    menuEliminar,
-           
+           (0,2,4,2):   InformeEstudiantesXGrupo
     }
