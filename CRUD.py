@@ -206,5 +206,34 @@ def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFr
 
 #------------------ FIN CONSULTA DE ESTUDIANTES POR PROFESOR -----------------------
 
+#------------------ INICIO CONSULTA DE NOTAS ESTUDIANTES ---------------------------
 
+#Se puede sacar el listado completo de Todas las notas por estudiantes
+#Se puede sacar el listado de notas de estudiante en particular
+#Se puede sacar el listado de los estudiantes que sacaron determinada nota
+
+def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMaterias:pd.DataFrame, IDEstud:str = 0, Nota = 0  ) -> DataFrame:
+    
+    '''
+    Args:
+        TblEstudiantes:  DataFrame tabla estudiantes
+        TblNotas:        DataFrame tabla notas
+        TblMaterias:     DataFrame tabla materias
+        IDEstud :        String con el id de estudiante
+        Nota :           String con el numero de nota a consultar 
+
+    '''
+    NotasEstudiante = pd.merge(TblEstudiantes,TblNotas,left_on='IDEstudiante',right_on='IDEstudiante')
+    NotasEstudiante = pd.merge(NotasEstudiante, TblMaterias, left_on='IDMateria', right_on='IDMateria')
+    if IDEstud !=0: 
+        NotasEstudiante = NotasEstudiante[NotasEstudiante['IDEstudiante'] == IDEstud ]
+    if Nota !=0:
+        NotasEstudiante = NotasEstudiante[NotasEstudiante['Nota'] >= Nota]    
+    NotasEstudiante = NotasEstudiante.sort_values(by = 'Apellidos' )
+    NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota']]
+    return NotasEstudiante
+    #Llamada a la funcion
+    #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud=0, Nota=0))
+    
+#------------------ FIN CONSULTA DE NOTAS ESTUDIANTES    ---------------------------
 
