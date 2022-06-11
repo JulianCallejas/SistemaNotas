@@ -2,6 +2,9 @@
 import pandas as pd
 from pandas.core.frame import DataFrame
 from pandas.core.indexes.base import Index
+import ClassesApp as clapp
+pd.options.display.max_rows = 100  #Imprime todas las filas del DataFrame
+pd.options.display.max_columns = 100 #Imprime todas las columnas del DataFrame
 #------------------Se crean las funciones para cargar datos-------------------------------------
 def CargaNotasCSV():
     # Leyendo archivo csv
@@ -75,6 +78,16 @@ def CargaGruposCSV():
 
 #------------------Se crean las funciones para Modificar Archivos CSV-------------------------------------
 
+def existeID (dFIngreso, nomCol, ID) -> bool:
+    '''
+    Args:
+        dFIngreso:  DataFrame a comsultar
+        nomCol: string con el nombre de la columna a consultar
+        ID: valor para verificar si tiene duplicados en la columna
+    '''
+    return ID in dFIngreso[nomCol].values
+
+
 def ReiniciarDB():
     reiniciado = 0
     try:
@@ -141,7 +154,6 @@ def consultaMateriasXProfesor ( df : pd.DataFrame, df2: pd.DataFrame, IDProf:str
     #Se realiza la union de las dos tablas
     MateriasXProfesor = pd.merge(MateriasXProfesor, df2, left_index=True, right_index=True)
 
-    #print(MateriasXProfesor)
     # Haciendo una consulta de un profesor por la llave IDProfesor
     if IDProf !=0:
         MateriasXProfesor = MateriasXProfesor[MateriasXProfesor['IDProfesor'] == IDProf]
@@ -167,13 +179,17 @@ def consultaMateriasXCiclo ( TblMaterias : pd.DataFrame, ciclo:str = 0 )-> DataF
     TblMaterias = TblMaterias.set_index(['Ciclo','IDMateria',])
     return TblMaterias
 
-def existeID (dFIngreso, nomCol, ID) -> bool:
-    return ID in dFIngreso[nomCol].values
 #------------------ CONSULTA DE ESTUDIANTES POR GRUPOS -----------------------
 
 def consultaEstudiantesXGrupo( TblEstudiantes : pd.DataFrame, TblGrupo : pd.DataFrame ) -> DataFrame :
+    '''
+    Args:
+        TblEstudiantes:  Ingrese el DataFrame de estudiantes
+        TblGrupo: Ingrese el DataFrame de grupo
+    '''
     TblEstudiantes = TblEstudiantes.set_index('IDGrupo')
     TblGrupo = TblGrupo.set_index('IDGrupo')
+
     EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_index=True, right_index=True)
     EstudiantesXGrupo  = EstudiantesXGrupo.sort_values(by  = 'Apellidos')
     return(EstudiantesXGrupo)
@@ -201,6 +217,7 @@ def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFr
         EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDProfe'] == IDProfe] 
         EstudiantesXGrupo = EstudiantesXGrupo.set_index(['Nombre Profesor','IDProfe','IDGrupo'])   
     return EstudiantesXGrupo
+
 # Llamada a la funcion
 #print(consultaEstudiantesXProfesor(CargaEstudiantesCSV,CargaGruposCSV,CargaProfesoresCSV,IDProfe=0,IDStu=0))
 
@@ -221,7 +238,6 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
         TblMaterias:     DataFrame tabla materias
         IDEstud :        String con el id de estudiante
         Nota :           String con el numero de nota a consultar 
-
     '''
     NotasEstudiante = pd.merge(TblEstudiantes,TblNotas,left_on='IDEstudiante',right_on='IDEstudiante')
     NotasEstudiante = pd.merge(NotasEstudiante, TblMaterias, left_on='IDMateria', right_on='IDMateria')
@@ -237,3 +253,15 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
     
 #------------------ FIN CONSULTA DE NOTAS ESTUDIANTES    ---------------------------
 
+
+#------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
+
+def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
+    '''
+    Args:
+        tblMaterias:  Ingrese el DataFrame de materias
+    '''
+    diccionario = {}
+    for datos in DataFrame.values:
+        diccionario[datos[0]] = objeto(list(datos))
+    return diccionario
