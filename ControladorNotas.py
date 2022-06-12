@@ -5,22 +5,15 @@ import InterfazConsola as ic
 import ClassesApp as clapp
 
 #Realiza el proceso de cargue de informacion
-
-# Se reordena el cargue de los archivos para el cargue de la informacion en los objetos
-# esto es: primero materias, luego profesores, luego grupos, luego estudiantes y finalmente notas
 cargado = 0 #variable de control de cargue de archivos
 tblMaterias, carga = crud.CargaMateriasCSV()
 cargado += carga
-
 tblProfesores, carga = crud.CargaProfesoresCSV()
 cargado += carga
-
 tblGrupos, carga = crud.CargaGruposCSV()
 cargado += carga
-
 tblEstudiantes, carga = crud.CargaEstudiantesCSV()
 cargado += carga
-
 tblNotas, carga = crud.CargaNotasCSV()
 cargado += carga
 
@@ -70,15 +63,19 @@ DicMenu = { (0,)   :     ic.menuInicial,
             (0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
             (0,2,2) :    ic.menuConsultarProfesores,
             (0,2,2,1) :  (ic.InformeListadoProfesores, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
+            (0,2,2,2) :  (ic.InformeGruposActivosXProfesor, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
             (0,2,3) :    ic.menuConsultarGrupos,
+            (0,2,3,1) :  (ic.InformeListadoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
+            (0,2,3,2) :  (ic.InformeListadoDetalladoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
             (0,2,4) :    ic.menuConsultarEstudiantes,
+            (0,2,4,1) :  (ic.InformeListadoDeEstudiantes, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
+            (0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
             (0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
             (0,2,5) :    ic.menuConsultarNotas,
             (0,3) :      ic.menuModificar,
             (0,4)  :     ic.menuEliminar,
 
 }
-
         #Se define la funcion para organizar las tuplas del diccionario de funciones, el primer objeto
         #de la tupla es la funcion, los otros objetos de la tupla son parametros para la cuncion
 def MostarMenu(accion: tuple):
@@ -113,4 +110,3 @@ while continuar and cargado == 5 :
     except :
         input("Opcion Invalida")
     
-
