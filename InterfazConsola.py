@@ -2,7 +2,7 @@
 #Modulo para crear las funciones de impresion por pantalla para el usuario
 import pandas as pd
 from os import system as dossystem  #añadida para limpiar consola
-dossystem('mode con: cols=120 lines=1500')
+dossystem('mode con: cols=175 lines=1500')
 
 Version = "SNApp V1.0"
 #Funcion para limpiar la pantalla cada vez que se abre un menu o un informe
@@ -150,8 +150,6 @@ def menuConsultarProfesores():
     print("|                                                          |")
     print("| 1. Listado de Profesores                                 |")
     print("| 2. Grupos activos por profesor                           |")
-    print("| 3. Materias por profesor                                 |")
-    print("| 4. Estudiantes por profesor                              |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
@@ -177,10 +175,33 @@ def InformeListadoProfesores(informe, tblProfesores, tblMaterias ):
     print(" --------------------------------------------------------------------- ")
     return opciones
 
+#Funcion para imprimir Listado de Profesores (0,2,2,2)
+def InformeGruposActivosXProfesor(informe, tblEstudiantes, tblGrupos, tblProfesores):
+    limpiapantalla()
+    listado = informe(tblEstudiantes, tblGrupos, tblProfesores)
+    listado = listado [listado['Activ'] == 'SI']
+    listado = listado [listado['IDProfe'] != 'P0']
+    listado = listado.set_index(['IDProfe','Nombre Profesor','IDGrupo'])
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|              LISTADO GRUPOS ACTIVOS POR PROFESOR                    |")
+    print(" --------------------------------------------------------------------- ")
+    if len(listado) > 100:
+        for paginas in range(0,int(len(listado)/100)):
+            ini = paginas * 100
+            fin = ini + 100
+            print(listado['Nombre Estudiante'].iloc[ini:fin],"\n")
+    else:
+        print(listado['Nombre Estudiante'],"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
 
 
-
- #Funcion para imprimir en pantalla el subMenu Consultar Grupos (0,2,3)
+#Funcion para imprimir en pantalla el subMenu Consultar Grupos (0,2,3)
 def menuConsultarGrupos():
     limpiapantalla()
     opciones = 4
@@ -191,14 +212,72 @@ def menuConsultarGrupos():
     print("|                                                          |")
     print("| 1. Listado de grupos                                     |")
     print("| 2. Listado detallado de grupos activos                   |")
-    print("| 3. Estudiantes por grupo                                 |")
-    print("| 4. Profesores por grupo                                  |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
+
+
+#Funcion para imprimir Listado de Grupos (0,2,3,1)
+def InformeListadoGrupos(informe, tblEstudiantes, tblGrupos, tblProfesores):
+    limpiapantalla()
+    listado = informe(tblEstudiantes, tblGrupos, tblProfesores)
+    #listado = listado [listado['Activ'] == 'SI']
+    listado = listado.sort_values(by = ['Activ','IDGrupo'], ascending=[False,True] )
+    listado = listado [listado['IDProfe'] != 'P0']
+    listado['Grupo'] = listado['IDGrupo']
+    listado = listado.set_index(['IDGrupo', 'Periodo', 'Horario', 'Activo','IDProfe'])
+    listado = listado[['Nombre Profesor','Grupo']]
+    listado = listado.drop_duplicates()
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|                       LISTADO DE GRUPOS                             |")
+    print(" --------------------------------------------------------------------- ")
+    if len(listado) > 100:
+        for paginas in range(0,int(len(listado)/100)):
+            ini = paginas * 100
+            fin = ini + 100
+            print(listado['Nombre Profesor'].iloc[ini:fin],"\n")
+    else:
+        print(listado['Nombre Profesor'],"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+#Funcion para imprimir Listado Detallado de Grupos (0,2,3,2)
+def InformeListadoDetalladoGrupos(informe, tblEstudiantes, tblGrupos, tblProfesores):
+    limpiapantalla()
+    listado = informe(tblEstudiantes, tblGrupos, tblProfesores)
+    listado = listado [listado['Activ'] == 'SI']
+    listado = listado.sort_values(by = ['IDGrupo','Apellidos','Nombre Estudiante'], ascending=[True, True, True] )
+    listado = listado [listado['IDProfe'] != 'P0']
+    listado['Grupo'] = listado['IDGrupo']
+    listado = listado.set_index(['IDGrupo', 'Horario', 'IDEstudiante'])
+    listado = listado[['Nombre Estudiante', 'Apellidos']]
+    listado = listado.drop_duplicates()
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|                LISTADO DETALLADO DE GRUPOS ACTIVOS                  |")
+    print(" --------------------------------------------------------------------- ")
+    if len(listado) > 100:
+        for paginas in range(0,int(len(listado)/100)):
+            ini = paginas * 100
+            fin = ini + 100
+            print(listado.iloc[ini:fin],"\n")
+    else:
+        print(listado,"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
 
  #Funcion para imprimir en pantalla el subMenu Consultar Estudiantes (0,2,4)
 def menuConsultarEstudiantes():
@@ -220,6 +299,35 @@ def menuConsultarEstudiantes():
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
 
+#Funcion para imprimir Listado de Estudiantes (0,2,4,1) 
+def InformeListadoDeEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfesores):
+    limpiapantalla()
+    listado = informe(tblEstudiantes, tblGrupos, tblProfesores)
+    #listado = listado [listado['Activ'] == 'SI']
+    listado = listado.sort_values(by = ['Apellidos','Nombre Estudiante'], ascending=[True, True] )
+    listado = listado [listado['IDProfe'] != 'P0']
+    listado['Grupo'] = listado['IDGrupo']
+    listado = listado.set_index(['IDEstudiante'])
+    listado = listado[['Nombre Estudiante', 'Apellidos','Email', 'IDGrupo', 'Activ']]
+    listado = listado.drop_duplicates()
+    opciones = 20
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|                      LISTADO DE ESTUDIANTES                         |")
+    print(" --------------------------------------------------------------------- ")
+    if len(listado) > 100:
+        for paginas in range(0,int(len(listado)/100)):
+            ini = paginas * 100
+            fin = ini + 100
+            print(listado.iloc[ini:fin],"\n")
+    else:
+        print(listado,"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
 #Funcion para imprimir Lista de Estudiantes por Grupo (0,2,4,2)
 def InformeEstudiantesXGrupo(informe, tblEstudiantes, tblGrupos ):
     limpiapantalla()
@@ -234,6 +342,39 @@ def InformeEstudiantesXGrupo(informe, tblEstudiantes, tblGrupos ):
     print(" --------------------------------------------------------------------- ")
     print(listado["IDEstudiante"],"\n")
     print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+#Funcion para imprimir Listado Notas por Estudiante (0,2,4,3) InformeListadoNotasXEstudiantes
+def InformeListadoNotasXEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfesores):
+    limpiapantalla()
+
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|                 LISTADO NOTAS POR ESTUDIANTES                       |")
+    print(" --------------------------------------------------------------------- ")
+    IdEstu = input("Ingrese el codigo del estudiante a consultar: ").upper()
+    
+    
+    listado = informe(tblEstudiantes, tblGrupos, tblProfesores, IdEstu)
+    #listado = listado [listado['Activ'] == 'SI']
+    listado = listado.sort_values(by = ['Ciclo', 'IDMateria'], ascending=[True,True] )
+    #listado = listado [listado['IDProfe'] != 'P0']
+    listado = listado.set_index(['Nombres', 'Apellidos','Ciclo', 'Materia'])
+    listado = listado[['Nota']]
+    listado = listado.drop_duplicates()
+    opciones = 20
+    if len(listado) > 100:
+        for paginas in range(0,int(len(listado)/100)):
+            ini = paginas * 100
+            fin = ini + 100
+            print(listado.iloc[ini:fin],"\n")
+    else:
+        print(listado,"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| Enter para Consultar nuevo estudiante                               |")
     print("| 0. Volver al menu anterior                                          |")
     print("| 9. Volver al menu principal                                         |")
     print(" --------------------------------------------------------------------- ")
@@ -329,11 +470,15 @@ DicMenu = {(0,)   :     menuInicial,
           #(0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor)
            (0,2,2) :    menuConsultarProfesores,
           #(0,2,2,1) :  (ic.InformeListadoProfesores, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
+          #(0,2,2,2) :  InformeGruposActivosXProfesor
            (0,2,3) :    menuConsultarGrupos,
+          #(0,2,3,1) :  (ic.InformeListadoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
+          #(0,2,3,2) :  (ic.InformeListadoDetalladoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
            (0,2,4) :    menuConsultarEstudiantes,
+          #(0,2,4,1) :  (ic.InformeListadoDeEstudiantes, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
           #(0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
+          #(0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
            (0,2,5) :    menuConsultarNotas,
            (0,3)   :    menuModificar,
            (0,4)   :    menuEliminar,
-           
     }
