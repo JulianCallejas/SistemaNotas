@@ -312,8 +312,9 @@ def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFr
 #Se puede sacar el listado completo de Todas las notas por estudiantes
 #Se puede sacar el listado de notas de estudiante en particular
 #Se puede sacar el listado de los estudiantes que sacaron determinada nota
-
-def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMaterias:pd.DataFrame, IDEstud:str = 0, Nota = 0  ) -> DataFrame:
+# Saber el promedio de notas por ciclo de determinado de un estudiante envias el ciclo y  id estudiante
+# Saber el promedio de notas por Materia  de determinado estudiante envias el string Materia
+def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMaterias:pd.DataFrame, IDEstud:str = 0, Nota = 0, CicloE:str = 0, Materia:str = 0  ) -> DataFrame:
     
     '''
     Args:
@@ -322,20 +323,55 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
         TblMaterias:     DataFrame tabla materias
         IDEstud :        String con el id de estudiante
         Nota :           String con el numero de nota a consultar 
+        CicloE :         String con el numero de ciclo a consultar para saber el promedio de un estudiante con su id
+        Materia :        String con el nombre de la materia que quieres saber el promedio y el idestudiante   
     '''
     NotasEstudiante = pd.merge(TblEstudiantes,TblNotas,left_on='IDEstudiante',right_on='IDEstudiante')
     NotasEstudiante = pd.merge(NotasEstudiante, TblMaterias, left_on='IDMateria', right_on='IDMateria')
-    if IDEstud !=0: 
+
+
+    if IDEstud !=0 and Materia != 0 : 
+        NotasEstudiante = NotasEstudiante[(NotasEstudiante.IDEstudiante == IDEstud) & (NotasEstudiante.Materia == Materia)]
+        NotasEstudiante['Nota'] = pd.to_numeric(NotasEstudiante['Nota'], errors='ignore')
+        total = NotasEstudiante['Nota'].count()
+        promedio = NotasEstudiante['Nota'].sum() / total
+        NotasEstudiante['Promedio'] = promedio
+        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio']]    
+        NotasEstudiante = NotasEstudiante.set_index(['Promedio','IDEstudiante']) 
+        return NotasEstudiante  
+
+    if IDEstud !=0 : 
         NotasEstudiante = NotasEstudiante[NotasEstudiante['IDEstudiante'] == IDEstud ]
+        NotasEstudiante['Nota'] = pd.to_numeric(NotasEstudiante['Nota'], errors='ignore')
+        total = NotasEstudiante['Nota'].count()
+        promedio = NotasEstudiante['Nota'].sum() / total
+        NotasEstudiante['Promedio'] = promedio
+        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio']]    
+        NotasEstudiante = NotasEstudiante.set_index(['Promedio','IDEstudiante']) 
+        return NotasEstudiante  
+
+    #Saber el promedio de notas
+    if IDEstud != 0 and CicloE != 0 :
+        NotasEstudiante = NotasEstudiante[(NotasEstudiante.IDEstudiante == IDEstud) & (NotasEstudiante.Ciclo == CicloE)]
+        NotasEstudiante['Nota'] = pd.to_numeric(NotasEstudiante['Nota'], errors='ignore')
+        total = NotasEstudiante['Nota'].count()
+        promedio = NotasEstudiante['Nota'].sum() / total
+        NotasEstudiante['Promedio'] = promedio
+        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio']]    
+        NotasEstudiante = NotasEstudiante.set_index(['Promedio','IDEstudiante']) 
+        return NotasEstudiante  
+    
     if Nota !=0:
-        NotasEstudiante = NotasEstudiante[NotasEstudiante['Nota'] >= Nota]    
+        NotasEstudiante = NotasEstudiante[NotasEstudiante['Nota'] >= Nota]     
     NotasEstudiante = NotasEstudiante.sort_values(by = 'Apellidos' )
+    NotasEstudiante['Ciclo'] = pd.to_numeric(NotasEstudiante['Ciclo'], errors='ignore')
     NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo']]
     return NotasEstudiante
     #Llamada a la funcion
-    #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud=0, Nota=0))
+    #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud='JUCA01', Nota=0, CicloE=0, Materia=0))
     
 #------------------ FIN CONSULTA DE NOTAS ESTUDIANTES    ---------------------------
+
 
 
 #------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
