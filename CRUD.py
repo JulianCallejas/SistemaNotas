@@ -19,7 +19,6 @@ lista_notas = []
 
 def crear_lista_objeto_materias(materias: pd.DataFrame) -> None:
     """Crea una lista de objetos de tipo materia con base en el dataframe que llega por parametro
-
     Args:
         materias (pd.DataFrame): El dataframe de materias
     """
@@ -34,7 +33,6 @@ def crear_lista_objeto_materias(materias: pd.DataFrame) -> None:
 
 def crear_lista_objeto_profesores(profesores: pd.DataFrame) -> None:
     """Crea una lista de objetos de tipo profesores con base en el dataframe que llega por parametro
-
     Args:
         profesores (pd.DataFrame): El dataframe de profesores
     """
@@ -46,7 +44,6 @@ def crear_lista_objeto_profesores(profesores: pd.DataFrame) -> None:
     
 def crear_lista_objeto_grupos(grupos: pd.DataFrame)-> None:
     """Crea una lista de objetos de tipo grupos con base en el dataframe que llega por parametro
-
     Args:
         grupos (pd.DataFrame): El dataframe de grupos
     """
@@ -63,7 +60,6 @@ def crear_lista_objeto_estudiantes(estudiantes: pd.DataFrame) -> None:
 
 def crear_lista_objeto_notas(notas: pd.DataFrame) -> None:
     """Crea una lista de objetos de tipo notas con base en el dataframe que llega por parametro
-
     Args:
         notas (pd.DataFrame): El dataframe de notas
     """
@@ -290,16 +286,20 @@ def consultaEstudiantesXGrupo( TblEstudiantes : pd.DataFrame, TblGrupo : pd.Data
 
 def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFrame, TblProfesores:pd.DataFrame, IDStu:str = 0, IDProfe:str = 0)->DataFrame:
     EstudiantesXGrupo = pd.merge( TblEstudiantes, TblGrupo, left_on='IDGrupo', right_on='IDGrupo')
+    EstudiantesXGrupo['Activ'] = list(map(lambda x: "SI" if(int(x)==1) else "NO",list(EstudiantesXGrupo['Activo'])))
+    EstudiantesXGrupo1 = EstudiantesXGrupo.assign(IDMater=EstudiantesXGrupo.IDMaterias.str.split(",")).explode('IDMater')
     EstudiantesXGrupo = EstudiantesXGrupo.assign(IDProfe=EstudiantesXGrupo.IDProfesores.str.split(",")).explode('IDProfe')
+    EstudiantesXGrupo["IdMater"] = EstudiantesXGrupo1['IDMater']
     EstudiantesXGrupo = pd.merge(left=EstudiantesXGrupo,right=TblProfesores, left_on='IDProfe', right_on='IDProfesor')
     EstudiantesXGrupo.rename(columns={'Nombre':'Nombre Profesor','Nombres':'Nombre Estudiante'},inplace=True) 
-    EstudiantesXGrupo = EstudiantesXGrupo [['IDEstudiante','Nombre Estudiante','Apellidos','Nombre Profesor','IDGrupo','IDProfe']]
+    EstudiantesXGrupo = EstudiantesXGrupo #[['IDEstudiante','Nombre Estudiante','Apellidos','Nombre Profesor','IDGrupo','IDProfe','Activ','IdMater']]
     if IDStu != 0:
         EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDEstudiante'] == IDStu]
         EstudiantesXGrupo = EstudiantesXGrupo.set_index(['IDEstudiante','Nombre Estudiante'])
     if IDProfe !=0:
         EstudiantesXGrupo = EstudiantesXGrupo[EstudiantesXGrupo['IDProfe'] == IDProfe] 
         EstudiantesXGrupo = EstudiantesXGrupo.set_index(['Nombre Profesor','IDProfe','IDGrupo'])   
+    
     return EstudiantesXGrupo
 
 # Llamada a la funcion
@@ -330,7 +330,7 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
     if Nota !=0:
         NotasEstudiante = NotasEstudiante[NotasEstudiante['Nota'] >= Nota]    
     NotasEstudiante = NotasEstudiante.sort_values(by = 'Apellidos' )
-    NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota']]
+    NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo']]
     return NotasEstudiante
     #Llamada a la funcion
     #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud=0, Nota=0))
