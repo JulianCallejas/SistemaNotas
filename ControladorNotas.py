@@ -73,6 +73,8 @@ DicMenu = { (0,)   :     ic.menuInicial,
             (0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
             (0,2,5) :    ic.menuConsultarNotas,
             (0,3) :      ic.menuModificar,
+            (0,3,1) :    (ic.menuModificarMaterias, tblMaterias, crud.existeID),
+            (0,3,2) :    (ic.menuModificarProfesores, tblProfesores, crud.existeID),
             (0,4)  :     ic.menuEliminar,
 
 }
