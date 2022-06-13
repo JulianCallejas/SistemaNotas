@@ -378,8 +378,10 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
 # Genera un nuevo consecutivo secuencial para segun la tabla
 # Materias, o Tabla Notas, o Tabla Grupo al momento del usuario ingresar una nueva materia
 
-'''
-Args:
+
+def consultarConsecutivoMateria(tabla:pd.DataFrame, columna:str = 0 )-> int:
+    '''
+    Args:
     tabla   :   DataFrame tabla Materias
     columna :   string con la columna de llave da cada tabla 
                 ejemplo: 
@@ -387,8 +389,7 @@ Args:
                 IDGrupo para grupos, 
                 IDMateria para materias.
 
-''' 
-def consultarConsecutivoMateria(tabla:pd.DataFrame, columna:str = 0 )-> int:
+    ''' 
     tabla[ columna ] = pd.to_numeric(tabla[ columna ], errors='ignore')
     nuevoConsecutivo = tabla [ columna ].max() + 1 
     return nuevoConsecutivo
@@ -398,10 +399,6 @@ def consultarConsecutivoMateria(tabla:pd.DataFrame, columna:str = 0 )-> int:
 #consultarConsecutivoMateria(TblMaterias, columna='IdNota')
 
 #------------------ FIN SABER EL ULTIMO CONSECUTIVO DE LA TABLA MATERIA    ---------------------------
-
-
-
-
 
 #------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
 
