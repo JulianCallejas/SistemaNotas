@@ -2,7 +2,7 @@
 #Modulo para crear las funciones de impresion por pantalla para el usuario
 import pandas as pd
 from os import system as dossystem  #añadida para limpiar consola
-dossystem('mode con: cols=175 lines=1500')
+#dossystem('mode con: cols=175 lines=1500')
 
 Version = "SNApp V1.0"
 #Funcion para limpiar la pantalla cada vez que se abre un menu o un informe
@@ -18,7 +18,7 @@ def menuInicial():
     opciones = 5
     print(Version)
     print(" ---------------------------------------------------------- ")
-    print("|               Menu Principal                             |")
+    print("|                     Menu Principal                       |")
     print(" ---------------------------------------------------------- ")
     print("|                                                          |")
     print("| 1. Agregar información                                   |")
@@ -49,6 +49,81 @@ def menuAgregar():
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
+    return opciones
+
+#Funcion para pantalla Agregar Materia (0,1,1)
+def menuAgregarMateria(creaID, tblMaterias):
+    limpiapantalla()
+    opciones = 6
+    mater = ""
+    cicl = ""
+    cred = ""
+    idm = ""
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                    AGREGAR MATERIA                       |")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el Nombre de la materia a agregar: ")
+    while mater == "":
+        mater = input("|  ")
+        if mater.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|               AGREGAR MATERIA CANCELADO                  |")
+            print(" --------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                              |")
+            print("| 9. Volver al menu principal                             |")
+            print(" --------------------------------------------------------- ")
+            return opciones
+        elif mater == "":
+            print("| Nombre de materia no valido")
+            print("| Ingrese el nombre de la materia a agregar o escriba SALIR para cancelar: ")
+    mater = mater.capitalize()
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el Ciclo en que la materia se dictara (numeros del 1 al 4): ")
+    while cicl == "":
+        cicl = input("|  ")
+        if cicl.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|               AGREGAR MATERIA CANCELADO                  |")
+            print(" --------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                              |")
+            print("| 9. Volver al menu principal                             |")
+            print(" --------------------------------------------------------- ")
+            return opciones
+        elif cicl == "" or cicl not in ["1","2","3","4"]:
+            print("| Ciclo no valido")
+            print("| Ingrese el numero del ciclo entre 1, 2, 3 o 4; o escriba SALIR para cancelar: ")
+            cicl = ""
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese los Creditos de la materia (numeros del 1 al 10): ")
+    while cred == "":
+        cred = input("|  ")
+        if cred.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|               AGREGAR MATERIA CANCELADO                  |")
+            print(" --------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                              |")
+            print("| 9. Volver al menu principal                             |")
+            print(" --------------------------------------------------------- ")
+            return opciones
+        elif cred == "" or  cred not in ["1","2","3","4" ,"5","6","7","8","9","10"]:
+            print("| Creditos no validos")
+            print("| Ingrese el numero de creditos del 1 al 10; o escriba SALIR para cancelar: ")
+            cred = ""
+    print(tblMaterias)
+    idm = creaID(tblMaterias,"IDMateria")
+    print(" --------------------------------------------------------- ")
+    print("| Id Materia:", idm)
+    print("| Materia:   ", mater)
+    print("| Ciclo:     ", cicl)
+    print("| Creditos:  ", cred)
+    print(" --------------------------------------------------------- ")
+    confirma = input("| Infrese 1 para confirmar o 0 para cancelar: ")
+    ###########Agregar el codigo para crear objeto y guardar objeto en archivo CVS
+    print(" --------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                              |")
+    print("| 9. Volver al menu principal                             |")
+    print(" --------------------------------------------------------- ")
     return opciones
 
 #Funcion para imprimir en pantalla el Menu Consultar (0,2)
@@ -463,6 +538,7 @@ def menuFallaCarga():
 #Se crea un diccionario con la ruta y lista de las funciones de los menus para ser llamadas automaticamente
 DicMenu = {(0,)   :     menuInicial,
            (0,1)  :     menuAgregar,     #0 es el menu principal y 1 es la opcion 1 Agregar del menu principal por tanto la llave de esta funcion es (0,1)
+          #(0,1,1) :    (ic.menuAgregarMateria,crud.crearConsecutivoIDNumerico, tblMaterias),
            (0,2)  :     menuConsultar,
            (0,2,1) :    menuConsultarMaterias,
           #(0,2,1,1):   (ic.InformeListadoMaterias,tblMaterias),
@@ -480,15 +556,17 @@ DicMenu = {(0,)   :     menuInicial,
           #(0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
            (0,2,5) :    menuConsultarNotas,
            (0,3)   :    menuModificar,
+          #(0,3,1) :    (ic.menuModificarMaterias, tblMaterias, crud.existeID),
+          #(0,3,2) :    (ic.menuModificarProfesores, tblProfesores, crud.existeID),           
            (0,4)   :    menuEliminar,
+           
     }
-
 #Menu para modificar materias (0,3,1)
 def menuModificarMaterias (tblMaterias:pd.DataFrame,existeID):
     opciones = 5
     
     print(" ---------------------------------------------------------- ")
-    print("|                 Modificar de materias                      |")
+    print("|                 Modificar de materias                    |")
     print(" ---------------------------------------------------------- ")
     print(tblMaterias.set_index("IDMateria"))
     print(" ---------------------------------------------------------- ")
