@@ -482,3 +482,79 @@ DicMenu = {(0,)   :     menuInicial,
            (0,3)   :    menuModificar,
            (0,4)   :    menuEliminar,
     }
+
+#Menu para modificar materias (0,3,1)
+def menuModificarMaterias (tblMaterias:pd.DataFrame,existeID):
+    opciones = 5
+    
+    print(" ---------------------------------------------------------- ")
+    print("|                 Modificar de materias                      |")
+    print(" ---------------------------------------------------------- ")
+    print(tblMaterias.set_index("IDMateria"))
+    print(" ---------------------------------------------------------- ")
+
+    id = str(input("Ingrese el id de la materia para modificar: "))
+    
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblMaterias, "IDMateria", id):
+
+        #Recolectar los nuevos datos        
+        nuevaMateria = str(input("Nueva Materia: "))
+        if nuevaMateria == "":
+            nuevaMateria = tblMaterias.set_index("IDMateria")["Materia"][id]
+                        
+        nuevoCiclo = str(input("Nuevo Ciclo: "))
+        if nuevoCiclo == "":
+            nuevoCiclo = tblMaterias.set_index("IDMateria")["Ciclo"][id]
+                
+        nuevoCreditos = str(input("Nuevo número de creditos: "))     
+        if nuevoCreditos == "":
+            nuevoCreditos = tblMaterias.set_index("IDMateria")["Creditos"][id]
+                
+        materiaActualizada = [id, nuevaMateria, nuevoCiclo, nuevoCreditos ]   
+
+    else:
+        print("No ha sido encontrada la Materia para modificar!")
+        
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    
+    return opciones
+# Menu para modificar profesores (0,3,2)
+def menuModificarProfesores(tblProfesores:pd.DataFrame,existeID):
+    
+    opciones = 5
+    
+    print(" ---------------------------------------------------------- ")
+    print("|               Listado de profesores                      |")
+    print(" ---------------------------------------------------------- ")
+    print(tblProfesores.set_index("IDProfesor"))
+    print(" ---------------------------------------------------------- ")
+
+    id = str(input("Ingrese el id del profesor para modificar: "))
+       
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblProfesores, "IDProfesor", id):
+
+        #Recolectar los nuevos datos        
+        nuevoNombre = str(input("Nuevo nombre: "))
+        if nuevoNombre == "":
+            nuevoNombre = tblProfesores.set_index("IDProfesor")["Nombre"][id]
+                        
+        nuevoIDMateria = str(input("Nuevo IDMateria: "))
+        if nuevoIDMateria == "":
+            nuevoIDMateria = tblProfesores.set_index("IDProfesor")["IDMateria"][id]
+                
+        materiaActualizada = [id, nuevoNombre, nuevoIDMateria ]   
+
+    else:
+        print("No ha sido encontrada el profesor para modificar!")
+        
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    
+    return opciones
