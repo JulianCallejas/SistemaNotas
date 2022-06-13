@@ -386,3 +386,19 @@ def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
         diccionario[datos[0]] = objeto(list(datos))
     return diccionario
 
+#--------------------Se crea la funcion de validar el ID de los profesores y crear un codigo-------------------
+def IDProfesor(Diccionario_Profesores: dict, IDProfesor):
+    return IDProfesor in Diccionario_Profesores.keys()
+
+def crearIDProfesor(Diccionario_Profesores:dict):
+    lista =[]
+    for llave in Diccionario_Profesores.keys():
+        letra, numero = llave[0], int(llave[1:])
+        lista.append(numero)
+    Nmax = max(lista)
+    nuevoID = Nmax + 1
+    lista.append(nuevoID)
+    Diccionario_Profesores["P"+ str(nuevoID)] = "profesor" + str(nuevoID)
+    print(Diccionario_Profesores)
+
+
