@@ -1,4 +1,5 @@
 #Modulo para las funciones de creacion, lectura, edicion y eliminacion de la información
+import numpy as np
 import pandas as pd
 from pandas.core.frame import DataFrame
 from pandas.core.indexes.base import Index
@@ -369,10 +370,68 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
     return NotasEstudiante
     #Llamada a la funcion
     #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud='JUCA01', Nota=0, CicloE=0, Materia=0))
-    
+ 
 #------------------ FIN CONSULTA DE NOTAS ESTUDIANTES    ---------------------------
 
-#------------------ INICIO SABER EL ULTIMO CONSECUTIVO DE LAS TABLAS MATERIA, O NOTA, O IDGRUPO    ---------------------------
+
+#Funcion para calcular el promedio por materia y la Nota final del Ciclo
+def consultaPromedios(tblEstudiantes,tblNotas,tblMaterias,idEstudiante = 0):
+    '''
+    Args:
+        TblEstudiantes:  DataFrame tabla estudiantes
+        TblNotas:        DataFrame tabla notas
+        TblMaterias:     DataFrame tabla materias
+        IDEstud :        String con el id de estudiante
+    '''
+    NotasEstudiante = consultaNotas(tblEstudiantes,tblNotas,tblMaterias,idEstudiante)
+    NotasEstudiante = NotasEstudiante.reset_index()
+    NotasEstudiante['Creditos'].astype(float)
+    datospromedio = NotasEstudiante
+    datospromedio = datospromedio[['IDMateria','Materia','Nota','IDEstudiante','Creditos','Ciclo']]
+    listaMaterias = [set(datospromedio['IDMateria']),set(datospromedio['IDEstudiante'])]
+    datospromedio = datospromedio.set_index(['Materia'])
+    datospromedio['Nota'].astype(float)
+    datospromedio['Creditos'].astype(float)
+    datospromedio=datospromedio.values
+    listaprom = []
+    listaidmateria = []
+    listaidestudiante = []
+    listapromciclo =[]
+    listaciclo = []
+    for est in listaMaterias[1]:
+        for idm in listaMaterias[0]:
+            promedios = list(map(lambda x:float(x[1]),list(filter(lambda x: x[0]==idm and x[2]==est, datospromedio))))
+            if promedios == []:
+                promedios = 0.0
+            else:
+                promedios = np.average(promedios)
+            pesomateria = list(set(map(lambda x:float(x[3]),list(filter(lambda x: x[0]==idm and x[2]==est, datospromedio)))))
+            cic = list(set(map(lambda x:int(x[4]),list(filter(lambda x: x[0]==idm and x[2]==est, datospromedio)))))
+            if cic == []:
+                cic = 0
+            else:
+                cic = cic[0]
+            if pesomateria ==[]:
+                pesomateria = [0,]
+            numeronotas = len(list(map(lambda x:float(x[1]),list(filter(lambda x: x[0]==idm and x[2]==est, datospromedio)))))
+            if numeronotas == 0:
+                numeronotas = 1
+            PromCiclo = ((pesomateria[0]/10) * promedios) / numeronotas
+            listaprom.append(promedios)
+            listaidmateria.append(idm)
+            listaidestudiante.append(est)
+            listapromciclo.append(PromCiclo)
+            listaciclo.append(cic)
+    dfpromedios = pd.DataFrame(list(zip(listaidmateria,listaidestudiante,listaprom,listapromciclo)), columns=['IDMateria','IDEstudiante', 'Promedio','NotaCiclo'])
+    NotasEstudiante = pd.merge(left=NotasEstudiante,right=dfpromedios, left_on=['IDMateria','IDEstudiante'], right_on=['IDMateria','IDEstudiante'])
+    NotaCiclo1 = NotasEstudiante[['IDEstudiante','Ciclo','NotaCiclo']]
+    NotaCiclo1 = NotaCiclo1.groupby(by = ['IDEstudiante','Ciclo']).sum()
+    NotasEstudiante.rename({'IDEstudiante': 'PesoNota'}, axis=1)
+    NotasEstudiante = pd.merge(left=NotasEstudiante,right=NotaCiclo1, left_on=['IDEstudiante','Ciclo'], right_on=['IDEstudiante','Ciclo'])
+    NotasEstudiante.columns = ['index', 'IDEstudiante', 'Nombres', 'Apellidos', 'Materia', 'Nota', 'Creditos', 'IDMateria', 'IdNota',  'Ciclo',  'Promedio',  'PesoCiclo',  'NotaFinalCiclo']
+    return NotasEstudiante
+
+#------------------ INICIO CREAR EL ULTIMO CONSECUTIVO DE LAS TABLAS MATERIA, O NOTA, O IDGRUPO    ---------------------------
 
 # Se agrega nueva funcionalidad
 # Genera un nuevo consecutivo secuencial para segun la tabla
@@ -388,12 +447,10 @@ def crearConsecutivoIDNumerico(tabla:pd.DataFrame, columna:str = 0 )-> int:
                 IdNota para tabla notas, 
                 IDGrupo para grupos, 
                 IDMateria para materias.
-
     ''' 
     tabla[ columna ] = pd.to_numeric(tabla[ columna ], errors='ignore')
     nuevoConsecutivo = tabla [ columna ].max() + 1 
     return nuevoConsecutivo
-
 #--------------------Se crea la funcion de validar el ID de los profesores y crear un codigo-------------------
 def ConsultarIDProfesor(Diccionario_Profesores: dict, IDProfesor):
     return IDProfesor in Diccionario_Profesores.keys()
@@ -405,9 +462,11 @@ def crearIDProfesor(Diccionario_Profesores:dict):
         lista.append(numero)
     Nmax = max(lista)
     nuevoID = Nmax + 1
-    lista.append(nuevoID)
-    Diccionario_Profesores["P"+ str(nuevoID)] = "profesor" + str(nuevoID)
-    print(Diccionario_Profesores)
+    nuevoID = "P"+ str(nuevoID)
+    if ConsultarIDProfesor(Diccionario_Profesores, nuevoID) == False:
+        return nuevoID 
+    else:
+        return "CrearCodigoManual"
 
 #------------------ FIN SABER EL ULTIMO CONSECUTIVO DE LA TABLA MATERIA    ---------------------------
 
