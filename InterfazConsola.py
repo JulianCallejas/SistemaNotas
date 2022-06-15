@@ -8,8 +8,7 @@ try:
     tabactive = True
 except :
     tabactive = False
-    
-
+ 
 from os import system as dossystem, truncate  #añadida para limpiar consola
 #dossystem('mode con: cols=175 lines=1500')
 
@@ -78,10 +77,10 @@ def menuAgregarMateria(creaID, tblMaterias):
         if mater.upper() == "SALIR":
             print(" ---------------------------------------------------------- ")
             print("|               AGREGAR MATERIA CANCELADO                  |")
-            print(" --------------------------------------------------------- ")
-            print("| 0. Volver al menu anterior                              |")
-            print("| 9. Volver al menu principal                             |")
-            print(" --------------------------------------------------------- ")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
             return opciones
         elif mater == "":
             print("| Nombre de materia no valido")
@@ -94,10 +93,10 @@ def menuAgregarMateria(creaID, tblMaterias):
         if cicl.upper() == "SALIR":
             print(" ---------------------------------------------------------- ")
             print("|               AGREGAR MATERIA CANCELADO                  |")
-            print(" --------------------------------------------------------- ")
-            print("| 0. Volver al menu anterior                              |")
-            print("| 9. Volver al menu principal                             |")
-            print(" --------------------------------------------------------- ")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
             return opciones
         elif cicl == "" or cicl not in ["1","2","3","4"]:
             print("| Ciclo no valido")
@@ -110,10 +109,10 @@ def menuAgregarMateria(creaID, tblMaterias):
         if cred.upper() == "SALIR":
             print(" ---------------------------------------------------------- ")
             print("|               AGREGAR MATERIA CANCELADO                  |")
-            print(" --------------------------------------------------------- ")
-            print("| 0. Volver al menu anterior                              |")
-            print("| 9. Volver al menu principal                             |")
-            print(" --------------------------------------------------------- ")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
             return opciones
         elif cred == "" or  cred not in ["1","2","3","4" ,"5","6","7","8","9","10"]:
             print("| Creditos no validos")
@@ -751,5 +750,4 @@ def menuModificarProfesores(tblProfesores:pd.DataFrame,existeID):
     print("| 0. Volver al menu anterior                                          |")
     print("| 9. Volver al menu principal                                         |")
     print(" --------------------------------------------------------------------- ")
-    
     return opciones
