@@ -125,7 +125,7 @@ def menuAgregarMateria(creaID, tblMaterias):
     print("| Ciclo:     ", cicl)
     print("| Creditos:  ", cred)
     print(" --------------------------------------------------------- ")
-    confirma = input("| Infrese 1 para confirmar o 0 para cancelar: ")
+    confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
     ###########Agregar el codigo para crear objeto y guardar objeto en archivo CVS
     print(" --------------------------------------------------------- ")
     print("| 0. Volver al menu anterior                              |")
