@@ -1,9 +1,7 @@
 #Importa librerias y modulos necesarios
-
 import CRUD as crud
 import InterfazConsola as ic
 import ClassesApp as clapp
-
 #Realiza el proceso de cargue de informacion
 cargado = 0 #variable de control de cargue de archivos
 tblMaterias, carga = crud.CargaMateriasCSV()
@@ -56,6 +54,7 @@ continuar = True
        #Se crea el diccionario de funciones del menu, que se llaman con la variable accion
 DicMenu = { (0,)   :     ic.menuInicial,
             (0,1)  :     ic.menuAgregar,     #0 es el menu principal y 1 es la opcion 1 Agregar del menu principal por tanto la llave de esta funcion es (0,1)
+            (0,1,1) :    (ic.menuAgregarMateria,crud.crearConsecutivoIDNumerico, tblMaterias),
             (0,2)  :     ic.menuConsultar,
             (0,2,1) :    ic.menuConsultarMaterias,
             (0,2,1,1):   (ic.InformeListadoMaterias,tblMaterias),
@@ -69,9 +68,13 @@ DicMenu = { (0,)   :     ic.menuInicial,
             (0,2,3,2) :  (ic.InformeListadoDetalladoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
             (0,2,4) :    ic.menuConsultarEstudiantes,
             (0,2,4,1) :  (ic.InformeListadoDeEstudiantes, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
-            (0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
             (0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
+            (0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
+            (0,2,4,4) :  (ic.InformeListadoPromediosXEstudiantes, crud.consultaPromedios,tblEstudiantes, tblNotas, tblMaterias ),
             (0,2,5) :    ic.menuConsultarNotas,
+            (0,2,5,1) :  (ic.InformeListadoGeneralNotas, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
+            (0,2,5,2) :  (ic.InformeListadoNotasxGrupo, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
+            (0,2,5,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
             (0,3) :      ic.menuModificar,
             (0,3,1) :    (ic.menuModificarMaterias, tblMaterias, crud.existeID),
             (0,3,2) :    (ic.menuModificarProfesores, tblProfesores, crud.existeID),           
@@ -107,8 +110,9 @@ while continuar and cargado == 5 :
         elif seleccion in range(opciones):
             if seleccion == 0:
                 accion = accion[:-1]
+                if accion == ():
+                    accion = (0,)
             else:
                 accion = accion + (seleccion,)
     except :
         input("Opcion Invalida")
-    
