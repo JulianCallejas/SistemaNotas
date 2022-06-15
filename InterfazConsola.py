@@ -1,7 +1,16 @@
 #menu
 #Modulo para crear las funciones de impresion por pantalla para el usuario
 import pandas as pd
-from os import system as dossystem  #añadida para limpiar consola
+import numpy as np
+#Se intenta importar la libreria tabulate para tabular informes grandes sin subindices para instalar usar comando pip install tabulate
+try:
+    from tabulate import tabulate
+    tabactive = True
+except :
+    tabactive = False
+    
+
+from os import system as dossystem, truncate  #añadida para limpiar consola
 #dossystem('mode con: cols=175 lines=1500')
 
 Version = "SNApp V1.0"
@@ -54,7 +63,7 @@ def menuAgregar():
 #Funcion para pantalla Agregar Materia (0,1,1)
 def menuAgregarMateria(creaID, tblMaterias):
     limpiapantalla()
-    opciones = 6
+    opciones = 1
     mater = ""
     cicl = ""
     cred = ""
@@ -110,7 +119,6 @@ def menuAgregarMateria(creaID, tblMaterias):
             print("| Creditos no validos")
             print("| Ingrese el numero de creditos del 1 al 10; o escriba SALIR para cancelar: ")
             cred = ""
-    print(tblMaterias)
     idm = creaID(tblMaterias,"IDMateria")
     print(" --------------------------------------------------------- ")
     print("| Id Materia:", idm)
@@ -129,7 +137,7 @@ def menuAgregarMateria(creaID, tblMaterias):
 #Funcion para imprimir en pantalla el Menu Consultar (0,2)
 def menuConsultar():
     limpiapantalla()
-    opciones = 7
+    opciones = 6
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|               Consultar Información                      |")
@@ -149,7 +157,7 @@ def menuConsultar():
 #Funcion para imprimir en pantalla el subMenu Consultar Materias (0,2,1)
 def menuConsultarMaterias():
     limpiapantalla()
-    opciones = 6
+    opciones = 4
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|               Consultar Materias                         |")
@@ -169,22 +177,25 @@ def menuConsultarMaterias():
 def InformeListadoMaterias(tblMaterias ):
     tblMaterias = tblMaterias.set_index('IDMateria')
     limpiapantalla()
-    opciones = 20
+    opciones = 1
     print(Version)
-    print(" --------------------------------------------------------- ")
-    print("|                   LISTADO MATERIAS                      |")
-    print(" --------------------------------------------------------- ")
-    print(tblMaterias,"\n")
-    print(" --------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                              |")
-    print("| 9. Volver al menu principal                             |")
-    print(" --------------------------------------------------------- ")
+    print(" --------------------------------------------------------------- ")
+    print("|                   LISTADO MATERIAS                            |")
+    print(" --------------------------------------------------------------- ")
+    if tabactive:
+        print(tabulate(tblMaterias, headers='keys', tablefmt = 'psql' ),"\n")
+    else:
+        print(tblMaterias,"\n")
+    print(" --------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                    |")
+    print("| 9. Volver al menu principal                                   |")
+    print(" --------------------------------------------------------------- ")
     return opciones
 
 #Funcion para imprimir Lista de Materias (0,2,1,2)
 def InformeMateriasXCiclo(informe, tblMaterias):
     limpiapantalla()
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------- ")
     print("|             LISTADO MATERIAS POR CICLO                  |")
@@ -202,7 +213,7 @@ def InformeProfesoresXMateria(informe, tblProfesores, tblMaterias ):
     listado = informe(tblProfesores,tblMaterias).sort_values(by = ['Materia','Nombre'])
     listado = listado.reset_index()
     listado = listado.set_index(['IDMateria','Materia','Nombre'])
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|               LISTADO DE PROFESORES POR MATERIA                     |")
@@ -217,7 +228,7 @@ def InformeProfesoresXMateria(informe, tblProfesores, tblMaterias ):
  #Funcion para imprimir en pantalla el subMenu Consultar Profesores (0,2,2)
 def menuConsultarProfesores():
     limpiapantalla()
-    opciones = 6
+    opciones = 3
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|               Consultar Profesores                       |")
@@ -238,7 +249,7 @@ def InformeListadoProfesores(informe, tblProfesores, tblMaterias ):
     listado = informe(tblProfesores,tblMaterias).sort_values(by = ['Nombre','Materia'])
     listado = listado.reset_index()
     listado = listado.set_index(['IDProfesor','Nombre','Materia'])
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|               LISTADO DE PROFESORES POR MATERIA                     |")
@@ -257,7 +268,7 @@ def InformeGruposActivosXProfesor(informe, tblEstudiantes, tblGrupos, tblProfeso
     listado = listado [listado['Activ'] == 'SI']
     listado = listado [listado['IDProfe'] != 'P0']
     listado = listado.set_index(['IDProfe','Nombre Profesor','IDGrupo'])
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|              LISTADO GRUPOS ACTIVOS POR PROFESOR                    |")
@@ -279,7 +290,7 @@ def InformeGruposActivosXProfesor(informe, tblEstudiantes, tblGrupos, tblProfeso
 #Funcion para imprimir en pantalla el subMenu Consultar Grupos (0,2,3)
 def menuConsultarGrupos():
     limpiapantalla()
-    opciones = 4
+    opciones = 3
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|                   Consultar Grupos                       |")
@@ -306,7 +317,7 @@ def InformeListadoGrupos(informe, tblEstudiantes, tblGrupos, tblProfesores):
     listado = listado.set_index(['IDGrupo', 'Periodo', 'Horario', 'Activo','IDProfe'])
     listado = listado[['Nombre Profesor','Grupo']]
     listado = listado.drop_duplicates()
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|                       LISTADO DE GRUPOS                             |")
@@ -335,7 +346,7 @@ def InformeListadoDetalladoGrupos(informe, tblEstudiantes, tblGrupos, tblProfeso
     listado = listado.set_index(['IDGrupo', 'Horario', 'IDEstudiante'])
     listado = listado[['Nombre Estudiante', 'Apellidos']]
     listado = listado.drop_duplicates()
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|                LISTADO DETALLADO DE GRUPOS ACTIVOS                  |")
@@ -357,7 +368,7 @@ def InformeListadoDetalladoGrupos(informe, tblEstudiantes, tblGrupos, tblProfeso
  #Funcion para imprimir en pantalla el subMenu Consultar Estudiantes (0,2,4)
 def menuConsultarEstudiantes():
     limpiapantalla()
-    opciones = 6
+    opciones = 5
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|                Consultar Estudiantes                     |")
@@ -385,18 +396,21 @@ def InformeListadoDeEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfesore
     listado = listado.set_index(['IDEstudiante'])
     listado = listado[['Nombre Estudiante', 'Apellidos','Email', 'IDGrupo', 'Activ']]
     listado = listado.drop_duplicates()
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|                      LISTADO DE ESTUDIANTES                         |")
     print(" --------------------------------------------------------------------- ")
-    if len(listado) > 100:
-        for paginas in range(0,int(len(listado)/100)):
-            ini = paginas * 100
-            fin = ini + 100
-            print(listado.iloc[ini:fin],"\n")
+    if tabactive:
+        print(tabulate(listado, headers='keys', tablefmt = 'psql' ),"\n")
     else:
-        print(listado,"\n")
+        if len(listado) > 100:
+            for paginas in range(0,int(len(listado)/100)):
+                ini = paginas * 100
+                fin = ini + 100
+                print(listado.iloc[ini:fin],"\n")
+        else:
+            print(listado,"\n")
     print(" --------------------------------------------------------------------- ")
     print("| 0. Volver al menu anterior                                          |")
     print("| 9. Volver al menu principal                                         |")
@@ -410,7 +424,7 @@ def InformeEstudiantesXGrupo(informe, tblEstudiantes, tblGrupos ):
     listado = listado.reset_index()
     listado = listado.sort_values(by = ['IDGrupo','Apellidos','Nombres'])
     listado = listado.set_index(['IDGrupo','Apellidos','Nombres'])
-    opciones = 20
+    opciones = 1
     print(Version)
     print(" --------------------------------------------------------------------- ")
     print("|               LISTADO DE ESTUDIANTES POR GRUPO                      |")
@@ -428,11 +442,9 @@ def InformeListadoNotasXEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfe
 
     print(Version)
     print(" --------------------------------------------------------------------- ")
-    print("|                 LISTADO NOTAS POR ESTUDIANTES                       |")
+    print("|                 LISTADO NOTAS POR ESTUDIANTE                        |")
     print(" --------------------------------------------------------------------- ")
     IdEstu = input("Ingrese el codigo del estudiante a consultar: ").upper()
-    
-    
     listado = informe(tblEstudiantes, tblGrupos, tblProfesores, IdEstu)
     #listado = listado [listado['Activ'] == 'SI']
     listado = listado.sort_values(by = ['Ciclo', 'IDMateria'], ascending=[True,True] )
@@ -440,7 +452,7 @@ def InformeListadoNotasXEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfe
     listado = listado.set_index(['Nombres', 'Apellidos','Ciclo', 'Materia'])
     listado = listado[['Nota']]
     listado = listado.drop_duplicates()
-    opciones = 20
+    opciones = 1
     if len(listado) > 100:
         for paginas in range(0,int(len(listado)/100)):
             ini = paginas * 100
@@ -455,11 +467,50 @@ def InformeListadoNotasXEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfe
     print(" --------------------------------------------------------------------- ")
     return opciones
 
+#Funcion para imprimir Listado Promedios por Estudiante (0,2,4,4) 
+def InformeListadoPromediosXEstudiantes(informe, tblEstudiantes, tblGrupos, tblProfesores):
+    limpiapantalla()
+    opciones = 1
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|            LISTADO PROMEDIOS DETALLADO POR ESTUDIANTE               |")
+    print(" --------------------------------------------------------------------- ")
+    IdEstu = input("Ingrese el codigo del estudiante a consultar: ").upper()
+    limpiapantalla()
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|            LISTADO PROMEDIOS DETALLADO POR ESTUDIANTE               |")
+    print(" --------------------------------------------------------------------- ")
+    listado = informe(tblEstudiantes, tblGrupos, tblProfesores, IdEstu)
+    estudiante = listado[['IDEstudiante', 'Nombres', 'Apellidos']]
+    estudiente = estudiante.drop_duplicates()
+    estudiente = estudiente.set_index(['IDEstudiante'])
+    print(estudiente)
+    print(" --------------------------------------------------------------------- ")
+    listado = listado[['Ciclo', 'NotaFinalCiclo', 'Materia', 'Promedio', 'Creditos','Nota']]
+    listado = listado.sort_values(by = ['Ciclo', 'Materia'], ascending=[True,True] )
+    listado = listado.set_index(['Ciclo', 'NotaFinalCiclo','Materia','Promedio','Creditos'])
+    #listado = listado[['Nota']]
+    listado = listado.drop_duplicates()
+    
+    if len(listado) > 100:
+        for paginas in range(0,int(len(listado)/100)):
+            ini = paginas * 100
+            fin = ini + 100
+            print(listado.iloc[ini:fin],"\n")
+    else:
+        print(listado,"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| Enter para Consultar nuevo estudiante                               |")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
 
  #Funcion para imprimir en pantalla el subMenu Consultar Notas (0,2,5)
 def menuConsultarNotas():
     limpiapantalla()
-    opciones = 6
+    opciones = 4
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|                   Consultar Notas                        |")
@@ -468,12 +519,76 @@ def menuConsultarNotas():
     print("| 1. Matriz general de notas                               |")
     print("| 2. Listado de notas por grupo                            |")
     print("| 3. Listado de notas por estudiante                       |")
-    print("| 4. Listado de promedios ciclo por estudiante             |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
+    return opciones
+
+#Funcion para imprimir Lista de notas (0,2,5,1)
+def InformeListadoGeneralNotas(informe, tblEstudiantes, tblNotas, tblMaterias):
+    #tblMaterias = tblMaterias.set_index('IDMateria')
+    limpiapantalla()
+    opciones = 1
+    print(Version)
+    print(" ------------------------------------------------------------------------- ")
+    print("|                          LISTADO TABLA NOTAS                            |")
+    print(" ------------------------------------------------------------------------- ")
+    listado = informe(tblEstudiantes, tblNotas, tblMaterias)
+    listado = listado[[ 'IdNota', 'IDEstudiante', 'Nombres', 'Apellidos', 'IDMateria', 'Materia', 'Nota']]
+    listado['idnf'] = listado['IdNota'].astype(float)
+    listado = listado.sort_values(by = ['idnf'], ascending=[True] )
+    listado = listado.set_index(['IdNota'])
+    if tabactive:
+        print(tabulate(listado[['IDEstudiante', 'Nombres', 'Apellidos', 'IDMateria', 'Materia', 'Nota']], headers='keys', tablefmt = 'psql' ),"\n")
+    else:
+        print(listado[['IDEstudiante', 'Nombres', 'Apellidos', 'IDMateria', 'Materia', 'Nota']],"\n")
+    print(" ------------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                              |")
+    print("| 9. Volver al menu principal                                             |")
+    print(" ------------------------------------------------------------------------- ")
+    return opciones
+
+
+#Funcion para imprimir Lista de notas (0,2,5,2)
+def InformeListadoNotasxGrupo(informe, tblEstudiantes, tblNotas, tblMaterias):
+    #tblMaterias = tblMaterias.set_index('IDMateria')
+    limpiapantalla()
+    opciones = 1
+    print(Version)
+    print(" ------------------------------------------------------------------------- ")
+    print("|                        LISTADO NOTAS POR GRUPO                          |")
+    print(" ------------------------------------------------------------------------- ")
+    IdGru = input("Ingrese Grupo a consultar: ").upper()
+    limpiapantalla()
+    print(" ------------------------------------------------------------------------- ")
+    print("|                        LISTADO NOTAS POR GRUPO                          |")
+    print(" ------------------------------------------------------------------------- ")
+    listado = informe(tblEstudiantes, tblNotas, tblMaterias)
+    listado = listado[listado['IDGrupo'] == IdGru ]
+    listado['Nota'] = listado['Nota'].astype(float)
+    listado['IDMateria'] = listado['IDMateria'].astype(int)
+    promediogeneral = pd.pivot_table(listado, values=['Nota'], index=['IDGrupo'], columns=['IDMateria'], aggfunc=np.average )
+    promedioestu = pd.pivot_table(listado, values=['Nota'], index=['IDEstudiante','Nombres','Apellidos'], columns=['IDMateria'], aggfunc=np.average )
+    if tabactive:
+        print(f"                    LISTADO DE MATERIAS                \n")
+        print(tabulate(tblMaterias[['IDMateria','Materia']], headers='keys', tablefmt = 'psql',showindex = False ),"\n")
+        print(f"                    PROMEDIO GENERAL DEL GRUPO {IdGru} \n")
+        print(tabulate(promediogeneral, headers=list(map(lambda x: x[1],promediogeneral.columns)), tablefmt = 'psql' ),"\n")
+        print(f"                   PROMEDIO DETALLADO DEL GRUPO {IdGru} \n")
+        promedioestu = promedioestu.reset_index()
+        print(tabulate(promedioestu, headers=list(map(lambda x: x[1],promedioestu.columns)), tablefmt = 'psql' ),"\n")
+    else:
+        print(f"                    PROMEDIO GENERAL DEL GRUPO {IdGru} \n")
+        print(promediogeneral.head(100),"\n")
+        print(f"                   PROMEDIO DETALLADO DEL GRUPO {IdGru} \n")
+        print(promedioestu.head(100),"\n")
+
+    print(" ------------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                              |")
+    print("| 9. Volver al menu principal                                             |")
+    print(" ------------------------------------------------------------------------- ")
     return opciones
 
 
@@ -554,7 +669,9 @@ DicMenu = {(0,)   :     menuInicial,
           #(0,2,4,1) :  (ic.InformeListadoDeEstudiantes, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
           #(0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
           #(0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
+          #(0,2,4,4) :  (ic.InformeListadoPromediosXEstudiantes, crud.consultaPromedios,tblEstudiantes, tblNotas, tblMaterias ),
            (0,2,5) :    menuConsultarNotas,
+          #(0,2,5,1) :  (ic.InformeListadoGeneralNotas, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
            (0,3)   :    menuModificar,
           #(0,3,1) :    (ic.menuModificarMaterias, tblMaterias, crud.existeID),
           #(0,3,2) :    (ic.menuModificarProfesores, tblProfesores, crud.existeID),           
