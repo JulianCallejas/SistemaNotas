@@ -1,5 +1,6 @@
 #Modulo para las funciones de creacion, lectura, edicion y eliminacion de la información
 import numpy as np
+from numpy.lib.function_base import average
 import pandas as pd
 from pandas.core.frame import DataFrame
 from pandas.core.indexes.base import Index
@@ -337,7 +338,7 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
         total = NotasEstudiante['Nota'].count()
         promedio = NotasEstudiante['Nota'].sum() / total
         NotasEstudiante['Promedio'] = promedio
-        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio']]    
+        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio','IDGrupo']]    
         NotasEstudiante = NotasEstudiante.set_index(['Promedio','IDEstudiante']) 
         return NotasEstudiante  
 
@@ -347,7 +348,7 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
         total = NotasEstudiante['Nota'].count()
         promedio = NotasEstudiante['Nota'].sum() / total
         NotasEstudiante['Promedio'] = promedio
-        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio']]    
+        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio','IDGrupo']]    
         NotasEstudiante = NotasEstudiante.set_index(['Promedio','IDEstudiante']) 
         return NotasEstudiante  
 
@@ -358,7 +359,7 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
         total = NotasEstudiante['Nota'].count()
         promedio = NotasEstudiante['Nota'].sum() / total
         NotasEstudiante['Promedio'] = promedio
-        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio']]    
+        NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','Promedio','IDGrupo']]    
         NotasEstudiante = NotasEstudiante.set_index(['Promedio','IDEstudiante']) 
         return NotasEstudiante  
     
@@ -366,7 +367,7 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
         NotasEstudiante = NotasEstudiante[NotasEstudiante['Nota'] >= Nota]     
     NotasEstudiante = NotasEstudiante.sort_values(by = 'Apellidos' )
     NotasEstudiante['Ciclo'] = pd.to_numeric(NotasEstudiante['Ciclo'], errors='ignore')
-    NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo']]
+    NotasEstudiante = NotasEstudiante[['IDEstudiante','Nombres','Apellidos','Materia', 'Nota', 'Creditos' ,'IDMateria', 'IdNota','Ciclo','IDGrupo']]
     return NotasEstudiante
     #Llamada a la funcion
     #print(consultaNotas(TblEstudiantes,TblNotas, TblMaterias, IDEstud='JUCA01', Nota=0, CicloE=0, Materia=0))
@@ -428,7 +429,7 @@ def consultaPromedios(tblEstudiantes,tblNotas,tblMaterias,idEstudiante = 0):
     NotaCiclo1 = NotaCiclo1.groupby(by = ['IDEstudiante','Ciclo']).sum()
     NotasEstudiante.rename({'IDEstudiante': 'PesoNota'}, axis=1)
     NotasEstudiante = pd.merge(left=NotasEstudiante,right=NotaCiclo1, left_on=['IDEstudiante','Ciclo'], right_on=['IDEstudiante','Ciclo'])
-    NotasEstudiante.columns = ['index', 'IDEstudiante', 'Nombres', 'Apellidos', 'Materia', 'Nota', 'Creditos', 'IDMateria', 'IdNota',  'Ciclo',  'Promedio',  'PesoCiclo',  'NotaFinalCiclo']
+    NotasEstudiante.columns = ['index', 'IDEstudiante', 'Nombres', 'Apellidos', 'Materia', 'Nota', 'Creditos', 'IDMateria', 'IdNota',  'Ciclo', 'IDGrupo', 'Promedio',  'PesoCiclo',  'NotaFinalCiclo']
     return NotasEstudiante
 
 #------------------ INICIO CREAR EL ULTIMO CONSECUTIVO DE LAS TABLAS MATERIA, O NOTA, O IDGRUPO    ---------------------------
@@ -481,7 +482,5 @@ def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
     for datos in DataFrame.values:
         diccionario[datos[0]] = objeto(list(datos))
     return diccionario
-
-
 
 
