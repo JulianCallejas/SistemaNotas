@@ -677,38 +677,52 @@ DicMenu = {(0,)   :     menuInicial,
            (0,4)   :    menuEliminar,
            
     }
+
 #Menu para modificar materias (0,3,1)
 def menuModificarMaterias (tblMaterias:pd.DataFrame,existeID):
+    limpiapantalla()
     opciones = 5
+    print(Version)
     
     print(" ---------------------------------------------------------- ")
-    print("|                 Modificar de materias                    |")
+    print("|                  Modificar materias                      |")
     print(" ---------------------------------------------------------- ")
-    print(tblMaterias.set_index("IDMateria"))
-    print(" ---------------------------------------------------------- ")
-
-    id = str(input("Ingrese el id de la materia para modificar: "))
+    id = str(input("| Ingrese el id de la materia que desea modificar: "))
     
     #Revisar si se encuentra el elemento solicitado     
     if existeID(tblMaterias, "IDMateria", id):
+        print(" ---------------------------------------------------------- ")
+        print("Materia a modificar: ")
+        print(tblMaterias.set_index("IDMateria").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
 
         #Recolectar los nuevos datos        
-        nuevaMateria = str(input("Nueva Materia: "))
+        nuevaMateria = str(input("| Ingrese la nueva Materia: "))
         if nuevaMateria == "":
             nuevaMateria = tblMaterias.set_index("IDMateria")["Materia"][id]
-                        
-        nuevoCiclo = str(input("Nuevo Ciclo: "))
-        if nuevoCiclo == "":
-            nuevoCiclo = tblMaterias.set_index("IDMateria")["Ciclo"][id]
-                
-        nuevoCreditos = str(input("Nuevo número de creditos: "))     
-        if nuevoCreditos == "":
-            nuevoCreditos = tblMaterias.set_index("IDMateria")["Creditos"][id]
-                
+        
+        nuevoCiclo = "_"
+        while nuevoCiclo == "_":                 
+            nuevoCiclo = str(input("| Ingrese el numero del nuevo ciclo entre 1, 2, 3 o 4: "))
+            if nuevoCiclo == "":
+                nuevoCiclo = tblMaterias.set_index("IDMateria")["Ciclo"][id]
+            elif nuevoCiclo not in ["1","2","3","4"]:
+                nuevoCiclo = "_"
+                print("| Ciclo no valido")
+        
+        nuevoCreditos = "_"
+        while nuevoCreditos == "_":   
+            nuevoCreditos = str(input("| Ingrese el nuevo número de creditos (de 1 a 10): "))     
+            if nuevoCreditos == "":
+                nuevoCreditos = tblMaterias.set_index("IDMateria")["Creditos"][id]
+            elif nuevoCreditos not in ["1","2","3","4","5","6","7","8","9","10"]:
+                nuevoCreditos = "_"
+                print("| Numero de creditos no valido")        
+        
         materiaActualizada = [id, nuevaMateria, nuevoCiclo, nuevoCreditos ]   
-
+        print(materiaActualizada)
     else:
-        print("No ha sido encontrada la Materia para modificar!")
+        print("| No ha sido encontrada la Materia para modificar!")
         
     print(" --------------------------------------------------------------------- ")
     print("| 0. Volver al menu anterior                                          |")
@@ -716,38 +730,213 @@ def menuModificarMaterias (tblMaterias:pd.DataFrame,existeID):
     print(" --------------------------------------------------------------------- ")
     
     return opciones
+
 # Menu para modificar profesores (0,3,2)
 def menuModificarProfesores(tblProfesores:pd.DataFrame,existeID):
-    
+    limpiapantalla()
     opciones = 5
+    print(Version)
     
     print(" ---------------------------------------------------------- ")
-    print("|               Listado de profesores                      |")
+    print("|               Modificar profesores                      |")
     print(" ---------------------------------------------------------- ")
-    print(tblProfesores.set_index("IDProfesor"))
-    print(" ---------------------------------------------------------- ")
-
-    id = str(input("Ingrese el id del profesor para modificar: "))
-       
+    id = str(input("| Ingrese el id del profesor que desea modificar: "))
+    
     #Revisar si se encuentra el elemento solicitado     
     if existeID(tblProfesores, "IDProfesor", id):
-
+        print(" ---------------------------------------------------------- ")
+        print("Profesor a modificar: ")
+        print(tblProfesores.set_index("IDProfesor").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        
         #Recolectar los nuevos datos        
-        nuevoNombre = str(input("Nuevo nombre: "))
+        nuevoNombre = str(input("| Ingrese el nuevo nombre: "))
         if nuevoNombre == "":
             nuevoNombre = tblProfesores.set_index("IDProfesor")["Nombre"][id]
                         
-        nuevoIDMateria = str(input("Nuevo IDMateria: "))
+        nuevoIDMateria = str(input("| Ingrese los id de materias que dicta el profesor: "))
         if nuevoIDMateria == "":
             nuevoIDMateria = tblProfesores.set_index("IDProfesor")["IDMateria"][id]
                 
-        materiaActualizada = [id, nuevoNombre, nuevoIDMateria ]   
-
+        profesorActualizado = [id, nuevoNombre, nuevoIDMateria ]   
+        print(profesorActualizado)
     else:
-        print("No ha sido encontrada el profesor para modificar!")
+        print("| No ha sido encontrado el profesor para modificar!")
         
     print(" --------------------------------------------------------------------- ")
     print("| 0. Volver al menu anterior                                          |")
     print("| 9. Volver al menu principal                                         |")
     print(" --------------------------------------------------------------------- ")
+    
+    return opciones
+
+# Menu para modificar grupos (0,3,3)
+def menuModificarGrupos(tblGrupos:pd.DataFrame,existeID):
+    limpiapantalla()
+    opciones = 5
+    print(Version)
+    
+    print(" ---------------------------------------------------------- ")
+    print("|                  Modificar Grupos                      |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id del grupo que desea modificar: "))
+    
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblGrupos, "IDGrupo", id):
+        print(" ---------------------------------------------------------- ")
+        print("Grupo a modificar: ")
+        print(tblGrupos.set_index("IDGrupo").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+
+        #Recolectar los nuevos datos        
+        nuevoPeriodo = str(input("| Ingrese el nuevo periodo: "))
+        if nuevoPeriodo == "":
+            nuevoPeriodo = tblGrupos.set_index("IDGrupo")["Periodo"][id]
+        
+        nuevoHorario = "_"
+        while nuevoHorario == "_":                
+            nuevoHorario = str(input("| Ingrese el nuevo horario (mañan, tarde o noche): "))
+            if nuevoHorario == "":
+                nuevoHorario = tblGrupos.set_index("IDGrupo")["Horario"][id]
+            elif nuevoHorario not in ["mañana", "tarde", "noche"]:
+                nuevoHorario = "_"
+                print("| Horario no valido")
+        
+        nuevoEstado = "_"        
+        while nuevoEstado =="_":
+            nuevoEstado = str(input("| Ingrese el nuevo estado (Activo: 1 o Inactivo: 0): "))     
+            if nuevoEstado == "":
+                nuevoEstado = tblGrupos.set_index("IDGrupo")["Activo"][id]
+            elif nuevoEstado not in ["0","1"]:
+                nuevoEstado = "_"
+                print("| Estado no valido")
+         
+        nuevoProfesor = str(input("| Ingrese los nuevos profesores del grupo: "))     
+        if nuevoProfesor == "":
+            nuevoProfesor = tblGrupos.set_index("IDGrupo")["IDProfesores"][id]
+
+        grupoActualizado = [id, nuevoPeriodo, nuevoHorario, nuevoEstado, nuevoProfesor ]   
+        print(grupoActualizado)
+    else:
+        print("No ha sido encontrado el grupo para modificar!")
+        
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    
+    return opciones
+    
+# Menu para modificar estudiantes (0,3,4)
+def menuModificarEstudiantes(tblEstudianes:pd.DataFrame,existeID):
+    limpiapantalla()
+    opciones = 5
+    print(Version)
+    
+    print(" ---------------------------------------------------------- ")
+    print("|               Modificar Estudiantes                      |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id del estudiante que desea modificar: "))
+    
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblEstudianes, "IDEstudiante", id):
+        print(" ---------------------------------------------------------- ")
+        print("Estudiante a modificar: ")
+        print(tblEstudianes.set_index("IDEstudiante").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        
+        #Recolectar los nuevos datos        
+        nuevoNombre = str(input("| Ingrese los nuevos nombres: "))
+        if nuevoNombre == "":
+            nuevoNombre = tblEstudianes.set_index("IDEstudiante")["Nombres"][id]
+                        
+        nuevoApellido = str(input("| Ingrese los nuevos apellidos: "))
+        if nuevoApellido == "":
+            nuevoApellido = tblEstudianes.set_index("IDEstudiante")["Apellidos"][id]
+        
+        nuevoEmail = "_"
+        while nuevoEmail == "_":
+            nuevoEmail = str(input("| Ingrese el nuevo Email: "))
+            if nuevoEmail == "":
+                nuevoEmail = tblEstudianes.set_index("IDEstudiante")["Email"][id]
+            elif "@" and ".com" not in nuevoEmail:
+                nuevoEmail = "_"
+                print("| Email no valido")
+        
+        nuevoGrupo = str(input("| Ingrese el id del nuevo grupo: "))
+        if nuevoGrupo == "":
+            nuevoGrupo = tblEstudianes.set_index("IDEstudiante")["IDGrupo"][id]
+                       
+        estudianteActualizado = [id, nuevoNombre, nuevoApellido, nuevoEmail, nuevoGrupo ]   
+        print(estudianteActualizado)
+    else:
+        print("| No ha sido encontrado el estudiante para modificar!")
+        
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    
+    return opciones
+
+# Menu para modificar notas(0,3,5)
+def menuModificarNotas(tblNotas:pd.DataFrame, existeID, tblEstudiantes, tblMaterias):
+    limpiapantalla()
+    opciones = 5
+    print(Version)
+    
+    print(" ---------------------------------------------------------- ")
+    print("|                  Modificar Notas                         |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id de la nota que desea modificar:  "))
+    
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblNotas, "IdNota", id):
+        print(" ---------------------------------------------------------- ")
+        print("Nota a modificar: ")
+        print(tblNotas.set_index("IdNota").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+
+        #Recolectar los nuevos datos
+        nuevoEstudiante = "_"
+        while nuevoEstudiante == "_":        
+            nuevoEstudiante = str(input("| Ingrese el id del nuevo estudiante: "))
+            if nuevoEstudiante == "":
+                    nuevoEstudiante = tblNotas.set_index("IdNota")["IDEstudiante"][id]
+            elif existeID(tblEstudiantes, "IDEstudiante", nuevoEstudiante):
+                pass
+            else:
+                print("| No ha sido encontrado el id del nuevo estudiante!")
+                nuevoEstudiante = "_"
+        
+        nuevaNota = "_"
+        while nuevaNota == "_":                
+            nuevaNota = str(input("| Ingrese la nueva nota (de 0 a 5): "))
+            if nuevaNota == "":
+                nuevaNota = tblNotas.set_index("IdNota")["Nota"][id]
+            elif float(nuevaNota) not in [x / 100.0 for x in range(0, 501)]:
+                print("| La nota no es valida")
+                nuevaNota = "_"
+        
+        nuevaMateria = "_"
+        while nuevaMateria == "_":    
+            nuevaMateria = str(input("| Ingrese el id de la nueva materia: "))     
+            if nuevaMateria == "":
+                nuevaMateria = tblNotas.set_index("IdNota")["IDMateria"][id]
+            elif existeID(tblMaterias, "IDMateria", nuevaMateria):
+                pass
+            else:
+                print("| No ha sido encontrado el id de la nueva materia!")
+                nuevaMateria = "_"
+        
+        notaActualizada = [id, nuevoEstudiante, nuevaNota, nuevaMateria]   
+        print(notaActualizada)
+    else:
+        print("| No ha sido encontrada la nota para modificar!")
+        
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    
     return opciones
