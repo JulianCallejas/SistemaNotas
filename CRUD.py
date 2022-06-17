@@ -483,4 +483,18 @@ def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
         diccionario[datos[0]] = objeto(list(datos))
     return diccionario
 
-
+def guardaCambios (self, materiaActualizada):
+    #Lee el csv y lo guarda en el archivo leerDoc
+    leerDoc = pd.read_csv('Materias.csv', sep = ";")
+    #extrae los nombres de las columnas del dataframe
+    filaCambio = list(leerDoc.columns)
+    #extra el valor de la primera columna, en este caso "IDMateria"
+    filaModificar = filaCambio[0]
+    #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
+    IDMateriaFila = materiaActualizada[0]
+    #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
+    leerDoc.loc[leerDoc[filaModificar] == IDMateriaFila] = materiaActualizada
+    #Escribe los cambios en el csv
+    leerDoc.to_csv('Materias.csv', index = False)
+    #Retorna el archivo modificado
+    return leerDoc
