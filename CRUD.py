@@ -498,3 +498,31 @@ def guardaCambios (self, materiaActualizada):
     leerDoc.to_csv('Materias.csv', index = False)
     #Retorna el archivo modificado
     return leerDoc
+#------------------ FIN funciones para Crear Diccionarios de Objetos    ---------------------------
+
+#-------------------------Se crean la funcion para validar el ID de los estudiantes y/o crear uno nuevo------------------------------
+
+def IDEstudiante(Diccionario_Estudiantes: dict, IDEstudiantes):
+    return IDEstudiantes in Diccionario_Estudiantes.keys()
+
+def crearIDEstudiante(Diccionario_Estudiantes:dict, nombres : str, apellidos:str):
+    nombre = nombres[0:2]
+    apellido = apellidos[0:2]
+    nID = (nombre + apellido).upper()
+
+    lista =[]
+    
+    for llave in Diccionario_Estudiantes.keys():
+        letras, numero = llave[0:4], int(llave[4:])
+        if letras == nID:
+            lista.append(letras)
+    Nmax = len(lista) + 1
+    if Nmax < 10:
+        nID = nID + "0"+ str(Nmax)
+    else:
+        nID = nID + str(Nmax)
+
+    if IDEstudiante(Diccionario_Estudiantes, nID):
+        print("Cree codigo manualmente")
+    else:
+        return nID
