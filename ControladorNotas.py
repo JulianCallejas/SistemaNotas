@@ -4,6 +4,8 @@ import InterfazConsola as ic
 import ClassesApp as clapp
 #Realiza el proceso de cargue de informacion
 cargado = 0 #variable de control de cargue de archivos
+
+
 tblMaterias, carga = crud.CargaMateriasCSV()
 cargado += carga
 tblProfesores, carga = crud.CargaProfesoresCSV()

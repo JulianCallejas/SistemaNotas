@@ -9,74 +9,87 @@ from ClasesApp import *
 pd.options.display.max_rows = 100  #Imprime todas las filas del DataFrame
 pd.options.display.max_columns = 100 #Imprime todas las columnas del DataFrame
 
-# Se declaran las listas de objetos que seran globales para ser usados en distintos metodos
-lista_materias = []
-lista_profesores = []
-lista_grupos = []
-lista_estudiantes = []
-lista_notas = []
+# Se declaran los diccionarios de objetos que seran globales para ser usados en distintos metodos
+dic_materias = {}
+dic_profesores = {}
+dic_grupos = {}
+dic_estudiantes = {}
+dic_notas = {}
 
+#------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
 
-#------------------Se crean las funciones para crear los objetos -------------------------------------
+def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
+    """Crea un diccionario de objetos con base en un data frame y el objeto que se la pasa
 
-def crear_lista_objeto_materias(materias: pd.DataFrame) -> None:
-    """Crea una lista de objetos de tipo materia con base en el dataframe que llega por parametro
     Args:
-        materias (pd.DataFrame): El dataframe de materias
-    """
-    # Para trabajar con variables locales dentro de una función se utiliza la palabra reservada global antes de la variable
-    # para indicar que se usara una variable del scope global
-    global lista_materias
-    
-    # Crea la lista de materias utilizando una función lambda para extraer cada linea del dataframe y
-    # usando el constructor de materia se crea el respectivo elemento, para cada campo se hace la conversión explicita al tipo correspondiente
-    # según la clase
-    lista_materias = list(map(lambda x:Materia(int(x[0]),x[1],int(x[2]),int(x[3])),materias.values.tolist()))
+        DataFrame (): El dataframe con los datos para crear el diccionario de objetos
+        objeto (): El tipo de objeto con el que se creara el diccionario
 
-def crear_lista_objeto_profesores(profesores: pd.DataFrame) -> None:
-    """Crea una lista de objetos de tipo profesores con base en el dataframe que llega por parametro
-    Args:
-        profesores (pd.DataFrame): El dataframe de profesores
+    Returns:
+        dict: Un diccionario de objetos
     """
-    
-    global lista_profesores
-    # Se usa map para crear un profesor según cada linea leida del dataframe, para el caso de los id de materias
-    # se hace un split con la "," y se transforma a int para obtener la lista de ids de materias que puede dictar el profesor
-    lista_profesores = list(map(lambda x:Profesor(x[0],x[1],list(map(int,x[2].split(",")))),profesores.values.tolist()))
-    
-def crear_lista_objeto_grupos(grupos: pd.DataFrame)-> None:
-    """Crea una lista de objetos de tipo grupos con base en el dataframe que llega por parametro
-    Args:
-        grupos (pd.DataFrame): El dataframe de grupos
-    """
-    global lista_grupos
-    # Se usa map para iterar sobre cada linea del dataframe y crear un objeto de tipo grupo, se hace el casteo
-    # a los tipos correspondientes y para el caso de materias y profesores se usa compresión de listas usando
-    # el id de las listas (haciendo un slit con ",") que vienen como campo en el dataframe para compararlo con los id de las materias y profesores registrados
-    # en el caso de las materias, como el id del objeto materia es int se hace el casteo de este a string para compararlo con la lista de id.
-    lista_grupos = list(map(lambda x:Grupo(int(x[0]),int(x[1]),x[2],int(x[3]),[materia for materia in lista_materias if str(materia.id) in x[4].split(",")],[profesor for profesor in lista_profesores if profesor.id in x[5].split(",")]),grupos.values.tolist()))
+    diccionario = {}
+    for datos in DataFrame.values:
+        diccionario[datos[0]] = objeto(list(datos))
+    return diccionario
 
-def crear_lista_objeto_estudiantes(estudiantes: pd.DataFrame) -> None:
-    global lista_estudiantes
-    lista_estudiantes = list(map(lambda x:Estudiante(x[0],x[1],x[2],x[3],int(x[4])),estudiantes.values.tolist()))
+def crear_diccionario_objeto_grupo(dataframe: pd.DataFrame) -> dict:
+    """Crea un diccionario de objetos de tipo grupo
 
-def crear_lista_objeto_notas(notas: pd.DataFrame) -> None:
-    """Crea una lista de objetos de tipo notas con base en el dataframe que llega por parametro
     Args:
-        notas (pd.DataFrame): El dataframe de notas
+        dataframe (pd.DataFrame): El dataframe con datos del grupo
+
+    Returns:
+        dict: Un diccionario de grupos
     """
-    global lista_notas
-    # Se usa map para iterar sobre cada linea del dataframe y crear un objeto de tipo grupo, se hace el casteo correspondiente a los tipos 
-    # según objeto y se usa un filter para obtener el estudiante y la materia correspondiente, dado que esto retorna una lista se saca la primera posición
-    # que corresponde con los elementos estudiante y materia buscado
-    lista_notas = list(map(lambda x:Nota(int(x[0]),list(filter(lambda y: (y.id==x[1]),lista_estudiantes))[0],float(x[2]),list(filter(lambda y: (y.id==int(x[3])),lista_materias))[0]),notas.values.tolist()))
+    diccionario = {}
+    for datos in dataframe.values:
+        # Usando list comprehension se obtiene la lista de materias y profesores
+        listaDatos = [datos[0],datos[1],datos[2],datos[3],
+                          [materia for materia in dic_materias.values() if materia.id in datos[4].split(",")],
+                          [profesor for profesor in dic_profesores.values() if profesor.id in datos[5].split(",")]]
+        diccionario[datos[0]] = Grupo(listaDatos)
+    return diccionario
+
+def crear_diccionario_objeto_estudiante(dataframe: pd.DataFrame) -> dict:
+    """Crea un diccionario de objetos tipo estudiante
+
+    Args:
+        dataframe (pd.DataFrame): Dataframe con la información de estudiantes
+
+    Returns:
+        dict: Un diccionario de estudiantes
+    """
+    diccionario = {}
+    for datos in dataframe.values:
+         # Usando list comprehension se obtiene el grupo del estudiante
+        listaDatos = [datos[0],datos[1],datos[2],datos[3],[grupo for grupo in dic_grupos.values() if grupo.id==datos[4]][0]]
+        diccionario[datos[0]] = Estudiante(listaDatos)
+    return diccionario
+
+def crear_diccionario_objeto_nota(dataframe: pd.DataFrame) -> dict:
+    """Crea un diccionario de objetos tipo nota
+
+    Args:
+        dataframe (pd.DataFrame): Dataframe con la información de notas
+
+    Returns:
+        dict: Un diccionario de notas
+    """
+    diccionario = {}
+    for datos in dataframe.values:
+        listaDatos = [datos[0],[estudiante for estudiante in dic_estudiantes.values() if estudiante.id==datos[1]][0],datos[2],
+                      [materia for materia in dic_materias.values() if materia.id==datos[3]][0]]
+        diccionario[datos[0]] = Nota(listaDatos)
+    return diccionario
 
 #------------------Se crean las funciones para cargar datos-------------------------------------
 def CargaNotasCSV():
     # Leyendo archivo csv
     try:
         df1 = pd.read_csv("Notas.csv",dtype=str,sep = ';')
-        crear_lista_objeto_notas(df1)
+        global dic_notas
+        dic_notas = crear_diccionario_objeto_nota(df1) 
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -91,7 +104,8 @@ def CargaNotasCSV():
 def CargaMateriasCSV():
     try:
         df1 = pd.read_csv("Materias.csv",dtype=str,sep = ';')
-        crear_lista_objeto_materias(df1)
+        global dic_materias
+        dic_materias=creaDiccionarioObjetos(df1,Materia)
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -106,7 +120,8 @@ def CargaMateriasCSV():
 def CargaProfesoresCSV():
     try:
         df1 = pd.read_csv("Profesores.csv",dtype=str,sep=';')
-        crear_lista_objeto_profesores(df1)
+        global dic_profesores
+        dic_profesores=creaDiccionarioObjetos(df1,Profesor)
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -121,7 +136,8 @@ def CargaProfesoresCSV():
 def CargaEstudiantesCSV():
     try:
         df1 = pd.read_csv("Estudiantes.csv",dtype=str,sep=';')
-        crear_lista_objeto_estudiantes(df1)
+        global dic_estudiantes
+        dic_estudiantes = crear_diccionario_objeto_estudiante(df1)
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -136,6 +152,8 @@ def CargaEstudiantesCSV():
 def CargaGruposCSV():
     try:
         df1 = pd.read_csv("Grupos.csv",dtype=str,sep=';')
+        global dic_grupos 
+        dic_grupos = crear_diccionario_objeto_grupo(df1)
         return df1,1
     except FileNotFoundError:
         return "Archivo no encontrado.", 0
@@ -153,11 +171,10 @@ def prueba_carga_objeto():
     CargaGruposCSV()
     CargaEstudiantesCSV()
     CargaNotasCSV()
-    CargaGruposCSV()
     #print([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]])
     #print ([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]][0])
-    print(list(map(str,lista_notas)))
-      
+    print(dic_notas["44"].materia)
+    
 #------------------Se crean las funciones para Modificar Archivos CSV-------------------------------------
 
 def existeID (dFIngreso, nomCol, ID) -> bool:
@@ -471,18 +488,6 @@ def crearIDProfesor(Diccionario_Profesores:dict):
 
 #------------------ FIN SABER EL ULTIMO CONSECUTIVO DE LA TABLA MATERIA    ---------------------------
 
-#------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
-
-def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
-    '''
-    Args:
-        tblMaterias:  Ingrese el DataFrame de materias
-    '''
-    diccionario = {}
-    for datos in DataFrame.values:
-        diccionario[datos[0]] = objeto(list(datos))
-    return diccionario
-
 def guardaCambios (self, materiaActualizada):
     #Lee el csv y lo guarda en el archivo leerDoc
     leerDoc = pd.read_csv('Materias.csv', sep = ";")
@@ -498,3 +503,4 @@ def guardaCambios (self, materiaActualizada):
     leerDoc.to_csv('Materias.csv', index = False)
     #Retorna el archivo modificado
     return leerDoc
+
