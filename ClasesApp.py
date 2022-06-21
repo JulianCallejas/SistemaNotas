@@ -1,4 +1,307 @@
 #Modulo para crear las diferentes clases a utilizar en la aplicacion
+
+class Materia:
+    """Clase asociada a la entidad Materia
+    """
+  
+    def __init__(self, datos:list) -> None:
+        """Constructor de la clase materia
+
+        Args:
+            datos (list): La lista con los datos de la materia
+        """
+
+        self.__id = datos[0]
+        self.__materia = datos[1]
+        self.__ciclo = datos[2]
+        self.__creditos = datos[3]
+        
+    
+    def __str__(self) -> str:
+        """Retorna la cadena representativa de la clase materia
+
+        Returns:
+            str: La cadena representativa de la clase materia conformada por su id y su nombre
+        """
+        return self.__id+":"+self.__materia
+
+    '''
+    Getters
+    '''
+    
+    @property
+    def id(self)->str:
+        """Retorna la id de la materia
+        Returns:
+            str: la id de la materia
+        """
+        return self.__id 
+    
+    @property
+    def materia(self)->str:
+        """Retorna el nombre de la materia
+
+        Returns:
+            str: El nombre de la materia
+        """
+        return self.__materia 
+    
+    @property
+    def ciclo(self)->str:
+        """Retorna el ciclo de la materia
+
+        Returns:
+            str: El ciclo de la materia
+        """
+        return self.__ciclo
+    
+    @property
+    def creditos(self)->str:
+        """Retorna el numero de creditos de la materia
+
+        Returns:
+            str: El numero de creditos de la materia
+        """
+        return self.__creditos  
+
+    '''
+    Setters
+    '''
+
+    @materia.setter
+    def materia(self,materia:str)->None:
+        """Actualiza el nombre de la materia
+
+        Args:
+            materia (str): El nuevo nombre de la materia
+        """
+        self.__materia=materia    
+
+    @ciclo.setter
+    def ciclo(self, ciclo:str)->None:
+        """Actualiza el ciclo de la materia
+
+        Args:
+            ciclo (str): El nuevo ciclo de la materia
+        """
+        self.__ciclo=ciclo
+    
+    @creditos.setter
+    def creditos(self, creditos:str)->None:
+        """Actualiza el numero de creditos e la materia
+
+        Args:
+            creditos (str): El nuevo numero de creditos de la materia
+        """
+        self.__creditos=creditos
+
+#------------------------------------------------------------------------------------------------------------------------------------------------  
+
+class Profesor:
+    """Clase asociada a la entidad profesor
+    """
+  
+    def __init__(self, datos:list) -> None:
+        """Constructor de la clase profesor
+
+        Args:
+            datos (_type_): Los datos del profesor
+        """
+
+        self.__id = datos[0]
+        self.__nombre = datos[1]
+        self.__materias = datos[2]
+    
+    def __str__(self) -> str:
+        """Cadena representativa de la clase Profesor
+
+        Returns:
+            str: La cadena representativa de la clase profesor conformada por su id y nombre
+        """
+        return self.__id+":"+self.__nombre
+        
+    '''
+    Getters
+    '''
+    
+    @property
+    def id(self)->str:
+        """Retorna la id del profesor
+        Returns:
+            str: la id del profesor
+        """
+        return self.__id
+    
+    @property
+    def nombre(self)->str:
+        """Retorna el nombre del profesor
+
+        Returns:
+            str: El nombre del profesor
+        """
+        return self.__nombre
+    
+    @property
+    def materias(self)->list[str]:
+        """Retorna la lista de id de materias que puede dictar el profesor
+
+        Returns:
+            list[str]: La lista de materias que puede dictar el profesor
+        """
+        return self.__materias
+    
+    '''
+    Setters
+    '''
+    
+    @nombre.setter
+    def nombre(self, nombre:str)->None:
+        """Actualiza el nombre del profeslor
+
+        Args:
+            nombre (str): El nuevo nombre del profesor
+        """
+        self.__nombre=nombre
+
+    @materias.setter
+    def materias(self, materias:list[str])->None:
+        """Actualiza la lista de id de materias que puede dictar el profesor
+
+        Args:
+            materias (list[str]): La nueva lista de materias que puede dictar el profesor
+        """
+        self.__materias=materias    
+
+#------------------------------------------------------------------------------------------------------------------------------------------------
+
+class Grupo:
+    """Clase asociada a la entidad grupo
+    """
+    
+    def __init__(self, datos:list) -> None:
+        """Constructor de la clase gruo
+
+        Args:
+            datos (list): La lista de datos del grupo
+        """
+        self.__id = datos[0]
+        self.__periodo = datos[1]
+        self.__horario = datos[2]
+        self.__activo = datos[3]
+        self.__materias = datos[4]
+        self.__profesores = datos[5]
+    
+    def __str__(self) -> str:
+        """Retorna la cadena representativa de la clase grupo 
+
+        Returns:
+            str: La cadena representativa de la clase grupo conformada por su id, periodo, horario y su estado de activación
+        """
+        return self.__id+":"+self.__periodo+":"+self.__horario+":"+("activo" if self.__activo==1 else "inactivo")
+        
+    '''
+    Getters
+    '''
+    
+    @property
+    def id(self)->str:
+        """Retorna la id del grupo
+        Returns:
+            str: la id del grupo
+        """
+        return self.__id
+
+    @property
+    def periodo(self)->str:
+        """Retorna el periodo del grupo
+        Returns:
+            str: El periodo del grupo
+        """
+        return self.__periodo
+
+    @property
+    def horario(self)->str:
+        """Retorna el horario del grupo
+        Returns:
+            str: El horario del grupo
+        """
+        return self.__horario
+
+    @property
+    def activo(self)->str:
+        """Retorna si el grupo esta activo o no
+        Returns:
+            str: 1 si el grupo está activo, 0 si no lo está 
+        """
+        return self.__activo
+    
+    @property
+    def materias(self)->list[Materia]:
+        """La lista de materias del grupo
+
+        Returns:
+            list[Materia]: La lista de materias del grupo
+        """
+        return self.__materias
+
+    @property
+    def profesores(self)->list[Profesor]:
+        """Retorna la lista de profesores del grupo
+
+        Returns:
+            list[Profesor]: La lista de profesores del grupo
+        """
+        return self.__profesores
+    
+    '''
+    Setters
+    '''
+
+    @periodo.setter
+    def periodo(self,periodo:str)->None:
+        """Actualiza el periodo del grupo
+        Args:
+            periodo (str): El nuevo periodo del grupo
+        """
+        self.__periodo=periodo
+        
+
+    @horario.setter
+    def horario(self,horario:str)->None:
+        """Actualiza el horario del grupo
+        Args:
+            horario (str): El nuevo horario del grupo
+        """
+        self.__horario=horario
+        
+    @activo.setter
+    def activo(self, activo:str)->None:
+        """Actualiza el estado de vigencia del grupo
+        Args:
+            activo (str): El nuevo estado de vigencia del grupo (activo:1, inactivo:0)
+        """
+        self.__activo=activo
+    
+    @materias.setter
+    def materias(self, materias:list[Materia])->None:
+        """Actualiza la lista de materias del grupo
+
+        Args:
+            materias (list[Materia]): La nueva lista de materias del grupo
+        """
+        self.__materias=materias
+    
+    @profesores.setter
+    def profesores(self, profesores:list[Profesor])->None:
+        """Actualiza la lista de profesores del grupo
+
+        Args:
+            profesores (list[Profesor]): La nueva lista de profesores del grupo
+        """ 
+        self.__profesores=profesores
+        
+#------------------------------------------------------------------------------------------------------------------------------------------------ 
+
 class Estudiante:
     """Clase asociada a la entidad estudiante
     
@@ -8,20 +311,17 @@ class Estudiante:
     Esta es la forma más cercana de realizar encapsulamiento en python
     """
     
-    def __init__(self, id:str, nombres:str, apellidos:str, email:str, grupo:int) -> None:
-        """Constructor de la clase estudiante que recibe, id, nombres, apellidos, email y grupo
+    def __init__(self,datos:list) -> None:
+        """Constructor de la clase estudiante
+
         Args:
-            id (str): Id del estudiante
-            nombres (str): Nombres del estudiante
-            apellidos (str): Apellidos del estudiante
-            email (str): Email del estudiante
-            grupo (int): Grupo del estudiante
+            datos (list): Lista con los datos del estudiante que vienen desde el dataframe
         """
-        self.__id = id
-        self.__nombres = nombres
-        self.__apellidos = apellidos
-        self.__email = email
-        self.__grupo = grupo
+        self.__id = datos[0]
+        self.__nombres = datos[1]
+        self.__apellidos = datos[2]
+        self.__email = datos[3]
+        self.__grupo = datos[4]
 
     def __str__(self) -> str:
         """El método str define la manera en como se muestra un objeto al momento de imprimirlo a convertirlo a string
@@ -76,10 +376,10 @@ class Estudiante:
         return self.__email 
         
     @property
-    def grupo(self)->int:
+    def grupo(self)->Grupo:
         """Retorna el grupo al que pertenece el estudiante
         Returns:
-            int: El grupo al que pertenece el estudiante
+            str: El grupo al que pertenece el estudiante
         """
         return self.__grupo
     
@@ -117,132 +417,36 @@ class Estudiante:
         self.__email = email
     
     @grupo.setter
-    def grupo(self, grupo:str )-> None:
+    def grupo(self, grupo:Grupo )-> None:
         """Actualiza el grupo del estudiante
         Args:
             grupo (str): El nuevo grupo del estudiante
         """
         self.__grupo = grupo 
-
+        
 #------------------------------------------------------------------------------------------------------------------------------------------------
 
-class Materia:
-    """Clase asociada a la entidad Materia
+class Nota:
+    """Clase asociada a la entidad nota
     """
-  
-    def __init__(self, id:int, materia:str, ciclo:int, creditos:int) -> None:
+    def __init__(self, datos:list) -> None:
+        """Constructor de la clase nota
 
-
-        self.__id = id
-        self.__materia = materia
-        self.__ciclo = ciclo
-        self.__creditos = creditos
-        
+        Args:
+            datos (list): La lista de datos de la nota
+        """
+        self.__id = datos[0]
+        self.__estudiante = datos[1]
+        self.__nota = datos[2]
+        self.__materia = datos[3]
     
     def __str__(self) -> str:
-        """Retorna la cadena representativa de la clase materia
+        """Cadena representativa de la clase nota
 
         Returns:
-            str: La cadena representativa de la clase materia conformada por su id y su nombre
+            str: La cadena representativa de la clase nota conformada por su id, estudiante y materia
         """
-        return str(self.__id)+":"+self.__materia
-
-    '''
-    Getters
-    '''
-    
-    @property
-    def id(self)->int:
-        """Retorna la id de la materia
-        Returns:
-            int: la id de la materia
-        """
-        return self.__id 
-    
-    @property
-    def materia(self)->str:
-        """Retorna el nombre de la materia
-
-        Returns:
-            str: El nombre de la materia
-        """
-        return self.__materia 
-    
-    @property
-    def ciclo(self)->int:
-        """Retorna el ciclo de la materia
-
-        Returns:
-            int: El ciclo de la materia
-        """
-        return self.__ciclo
-    
-    @property
-    def creditos(self)->int:
-        """Retorna el numero de creditos de la materia
-
-        Returns:
-            int: El numero de creditos de la materia
-        """
-        return self.__creditos  
-
-    '''
-    Setters
-    '''
-
-    @materia.setter
-    def materia(self,materia:str)->None:
-        """Actualiza el nombre de la materia
-
-        Args:
-            materia (str): El nuevo nombre de la materia
-        """
-        self.__materia=materia    
-
-    @ciclo.setter
-    def ciclo(self, ciclo:int)->None:
-        """Actualiza el ciclo de la materia
-
-        Args:
-            ciclo (int): El nuevo ciclo de la materia
-        """
-        self.__ciclo=ciclo
-    
-    @creditos.setter
-    def creditos(self, creditos:int)->None:
-        """Actualiza el numero de creditos e la materia
-
-        Args:
-            creditos (int): El nuevo numero de creditos de la materia
-        """
-        self.__creditos=creditos
-
-#------------------------------------------------------------------------------------------------------------------------------------------------  
-
-class Profesor:
-    """Clase asociada a la entidad profesor
-    """
-  
-    def __init__(self, id:str, nombre:str, materias:list[int]) -> None:
-        """Constructor de la clase profesor
-
-        Args:
-            id (str): La id del profesor
-            nombre (str): El nombre del profesor
-            materias (list[int]): La lista de id de materias que puede dictar el profesor
-        """
-
-        self.__id = id
-        self.__nombre = nombre
-        self.__materias = materias
-    
-    def __str__(self) -> str:
-        """Cadena representativa de la clase Profesor
-
-        Returns:
-            str: La cadena representativa de la clase profesor conformada por su id y nombre
-        """
-        return self.__id+":"+self.__nombre
+        return self.__id+":"+str(self.__estudiante)+":"+str(self.__materia)
         
     '''
     Getters
@@ -253,86 +457,6 @@ class Profesor:
         """Retorna la id del profesor
         Returns:
             str: la id del profesor
-        """
-        return self.__id
-    
-    @property
-    def nombre(self)->str:
-        """Retorna el nombre del profesor
-
-        Returns:
-            str: El nombre del profesor
-        """
-        return self.__nombre
-    
-    @property
-    def materias(self)->list[int]:
-        """Retorna la lista de id de materias que puede dictar el profesor
-
-        Returns:
-            list[int]: La lista de materias que puede dictar el profesor
-        """
-        return self.__materias
-    
-    '''
-    Setters
-    '''
-    
-    @nombre.setter
-    def nombre(self, nombre:str)->None:
-        """Actualiza el nombre del profeslor
-
-        Args:
-            nombre (str): El nuevo nombre del profesor
-        """
-        self.__nombre=nombre
-
-    @materias.setter
-    def materias(self, materias:list[int])->None:
-        """Actualiza la lista de id de materias que puede dictar el profesor
-
-        Args:
-            materias (list[int]): La nueva lista de materias que puede dictar el profesor
-        """
-        self.__materias=materias    
-
-#------------------------------------------------------------------------------------------------------------------------------------------------ 
-
-class Nota:
-    """Clase asociada a la entidad nota
-    """
-    def __init__(self, id:int, estudiante:Estudiante, nota:float, materia:Materia) -> None:
-        """Constructor de la clase Nota
-
-        Args:
-            id (int): La id de la nota
-            estudiante (Estudiante): El estudiante de la nota
-            nota (float): La calificación numerica asociada a la nota
-            materia (Materia): La materia asociada a la nota
-        """
-        self.__id=id
-        self.__estudiante=estudiante
-        self.__nota = nota
-        self.__materia=materia
-    
-    def __str__(self) -> str:
-        """Cadena representativa de la clase nota
-
-        Returns:
-            str: La cadena representativa de la clase nota conformada por su id, estudiante y materia
-        """
-        return str(self.__id)+":"+str(self.__estudiante)+":"+str(self.__materia)
-        
-
-    '''
-    Getters
-    '''
-    
-    @property
-    def id(self)->int:
-        """Retorna la id del profesor
-        Returns:
-            int: la id del profesor
         """
         return self.__id
 
@@ -346,11 +470,11 @@ class Nota:
         return self.__estudiante
     
     @property
-    def nota(self)->float:
+    def nota(self)->str:
         """Retorna la calificación númerica asociada a la nota
 
         Returns:
-            float: _description_
+            str: _description_
         """
         return self.__nota
 
@@ -377,11 +501,11 @@ class Nota:
         self.__estudiante=estudiante
     
     @nota.setter
-    def nota(self, nota:float)->None:
+    def nota(self, nota:str)->None:
         """Actualiza la calificación numerica asociada a la nota
 
         Args:
-            nota (float): La nueva calificación numérica de la nota
+            nota (str): La nueva calificación numérica de la nota
         """
         self.__nota=nota
 
@@ -394,137 +518,3 @@ class Nota:
         """
         self.__materia=materia
         
-#------------------------------------------------------------------------------------------------------------------------------------------------
-
-class Grupo:
-    """Clase asociada a la entidad grupo
-    """
-    
-    def __init__(self, id:int, periodo:int, horario:str, activo:int, materias:list[Materia], profesores:list[Profesor]) -> None:
-        """Constructor de la clase grupo
-
-        Args:
-            id (int): La id del grupo
-            periodo (int): El periodo del grupo
-            horario (str): El horario del grupo (mañana, tarde, noche)
-            activo (int): El estado de vigencia del grupo (activo=1, inactivo=0)
-            materias (list[Materia]): Lista de materias del grupo
-            profesores (list[Profesor]): Lista de profesores del grupo
-        """
-        self.__id = id
-        self.__periodo = periodo
-        self.__horario = horario
-        self.__activo = activo
-        self.__materias = materias
-        self.__profesores = profesores
-    
-    def __str__(self) -> str:
-        """Retorna la cadena representativa de la clase grupo 
-
-        Returns:
-            str: La cadena representativa de la clase grupo conformada por su id, periodo, horario y su estado de activación
-        """
-        return str(self.__id)+":"+str(self.__periodo)+":"+self.__horario+":"+("activo" if self.__activo==1 else "inactivo")
-        
-    '''
-    Getters
-    '''
-    
-    @property
-    def id(self)->int:
-        """Retorna la id del grupo
-        Returns:
-            int: la id del grupo
-        """
-        return self.__id
-
-    @property
-    def periodo(self)->int:
-        """Retorna el periodo del grupo
-        Returns:
-            int: El periodo del grupo
-        """
-        return self.__periodo
-
-    @property
-    def horario(self)->str:
-        """Retorna el horario del grupo
-        Returns:
-            str: El horario del grupo
-        """
-        return self.__horario
-
-    @property
-    def activo(self)->int:
-        """Retorna si el grupo esta activo o no
-        Returns:
-            int: 1 si el grupo está activo, 0 si no lo está 
-        """
-        return self.__activo
-    
-    @property
-    def materias(self)->list[Materia]:
-        """La lista de materias del grupo
-
-        Returns:
-            list[Materia]: La lista de materias del grupo
-        """
-        return self.__materias
-
-    @property
-    def profesores(self)->list[Profesor]:
-        """Retorna la lista de profesores del grupo
-
-        Returns:
-            list[Profesor]: La lista de profesores del grupo
-        """
-        return self.__profesores
-    
-    '''
-    Setters
-    '''
-
-    @periodo.setter
-    def periodo(self,periodo:int)->None:
-        """Actualiza el periodo del grupo
-        Args:
-            periodo (int): El nuevo periodo del grupo
-        """
-        self.__periodo=periodo
-        
-
-    @horario.setter
-    def horario(self,horario:str)->None:
-        """Actualiza el horario del grupo
-        Args:
-            horario (str): El nuevo horario del grupo
-        """
-        self.__horario=horario
-        
-    @activo.setter
-    def activo(self, activo:int)->None:
-        """Actualiza el estado de vigencia del grupo
-        Args:
-            activo (int): El nuevo estado de vigencia del grupo (activo:1, inactivo:0)
-        """
-        self.__activo=activo
-    
-    @materias.setter
-    def materias(self, materias:list[Materia])->None:
-        """Actualiza la lista de materias del grupo
-
-        Args:
-            materias (list[Materia]): La nueva lista de materias del grupo
-        """
-        self.__materias=materias
-    
-    @profesores.setter
-    def profesores(self, profesores:list[Profesor])->None:
-        """Actualiza la lista de profesores del grupo
-
-        Args:
-            profesores (list[Profesor]): La nueva lista de profesores del grupo
-        """ 
-        self.__profesores=profesores
-        
-#------------------------------------------------------------------------------------------------------------------------------------------------
