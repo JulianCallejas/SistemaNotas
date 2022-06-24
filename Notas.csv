@@ -1,4 +1,4 @@
-IdNota;IDEstudiante;Nota;Materia
+IdNota;IDEstudiante;Nota;IDMateria
 1;CATO01;4.21;1
 2;CEIB01;4.90;1
 3;JUBE01;2.91;1

@@ -1,4 +1,4 @@
-IDEstudiante;Nombres;Apellidos;Email;Grupo
+IDEstudiante;Nombres;Apellidos;Email;IDGrupo
 CATO01;Carlos Fernando;Tovar Yepes;carlosfernandotovar@correoe.com;1
 CEIB01;Cesar Augusto;Ibañez Lar;cesaraugustoibañez@correoe.co;2
 JUBE01;Juan Carlos;Bermudez Ramirez;juancarlosbermudez@correoe.com;3
