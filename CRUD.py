@@ -1,6 +1,6 @@
 #Modulo para las funciones de creacion, lectura, edicion y eliminacion de la información
+
 import numpy as np
-from numpy.lib.function_base import average
 import pandas as pd
 from pandas.core.frame import DataFrame
 from pandas.core.indexes.base import Index
@@ -16,29 +16,28 @@ dic_grupos = {}
 dic_estudiantes = {}
 dic_notas = {}
 
+global tblMaterias , tblProfesores, tblGrupos, tblEstudiantes, tblNotas 
+
 #------------------Se crean las funciones para Crear Diccionarios de Objetos-------------------------------------
 
 def creaDiccionarioObjetos(DataFrame,objeto) -> dict:
     """Crea un diccionario de objetos con base en un data frame y el objeto que se la pasa
-
     Args:
         DataFrame (): El dataframe con los datos para crear el diccionario de objetos
         objeto (): El tipo de objeto con el que se creara el diccionario
-
     Returns:
         dict: Un diccionario de objetos
     """
     diccionario = {}
     for datos in DataFrame.values:
         diccionario[datos[0]] = objeto(list(datos))
+   
     return diccionario
 
 def crear_diccionario_objeto_grupo(dataframe: pd.DataFrame) -> dict:
     """Crea un diccionario de objetos de tipo grupo
-
     Args:
         dataframe (pd.DataFrame): El dataframe con datos del grupo
-
     Returns:
         dict: Un diccionario de grupos
     """
@@ -53,10 +52,8 @@ def crear_diccionario_objeto_grupo(dataframe: pd.DataFrame) -> dict:
 
 def crear_diccionario_objeto_estudiante(dataframe: pd.DataFrame) -> dict:
     """Crea un diccionario de objetos tipo estudiante
-
     Args:
         dataframe (pd.DataFrame): Dataframe con la información de estudiantes
-
     Returns:
         dict: Un diccionario de estudiantes
     """
@@ -69,10 +66,8 @@ def crear_diccionario_objeto_estudiante(dataframe: pd.DataFrame) -> dict:
 
 def crear_diccionario_objeto_nota(dataframe: pd.DataFrame) -> dict:
     """Crea un diccionario de objetos tipo nota
-
     Args:
         dataframe (pd.DataFrame): Dataframe con la información de notas
-
     Returns:
         dict: Un diccionario de notas
     """
@@ -164,17 +159,22 @@ def CargaGruposCSV():
     except Exception:
         return "Alguna otra Exepcion", 0  
 
-def prueba_carga_objeto():
+def cargaDatos():
     
-    CargaMateriasCSV()
-    CargaProfesoresCSV()
-    CargaGruposCSV()
-    CargaEstudiantesCSV()
-    CargaNotasCSV()
-    #print([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]])
-    #print ([profesor for profesor in lista_profesores if profesor.id in ["P1","P2"]][0])
-    print(dic_notas["44"].materia)
-    
+    global tblMaterias, tblProfesores, tblGrupos, tblEstudiantes, tblNotas
+    cargado = 0 #variable de control de cargue de archivos
+    tblMaterias, carga = CargaMateriasCSV()
+    cargado += carga
+    tblProfesores, carga = CargaProfesoresCSV()
+    cargado += carga
+    tblGrupos, carga = CargaGruposCSV()
+    cargado += carga
+    tblEstudiantes, carga = CargaEstudiantesCSV()
+    cargado += carga
+    tblNotas, carga = CargaNotasCSV()
+    cargado += carga
+    return cargado
+
 #------------------Se crean las funciones para Modificar Archivos CSV-------------------------------------
 
 def existeID (dFIngreso, nomCol, ID) -> bool:
@@ -308,7 +308,7 @@ def consultaEstudiantesXProfesor(TblEstudiantes:pd.DataFrame, TblGrupo:pd.DataFr
     EstudiantesXGrupo['Activ'] = list(map(lambda x: "SI" if(int(x)==1) else "NO",list(EstudiantesXGrupo['Activo'])))
     EstudiantesXGrupo1 = EstudiantesXGrupo.assign(IDMater=EstudiantesXGrupo.IDMaterias.str.split(",")).explode('IDMater')
     EstudiantesXGrupo = EstudiantesXGrupo.assign(IDProfe=EstudiantesXGrupo.IDProfesores.str.split(",")).explode('IDProfe')
-    EstudiantesXGrupo["IdMater"] = EstudiantesXGrupo1['IDMater']
+    #EstudiantesXGrupo["IdMater"] = EstudiantesXGrupo1['IDMater']
     EstudiantesXGrupo = pd.merge(left=EstudiantesXGrupo,right=TblProfesores, left_on='IDProfe', right_on='IDProfesor')
     EstudiantesXGrupo.rename(columns={'Nombre':'Nombre Profesor','Nombres':'Nombre Estudiante'},inplace=True) 
     EstudiantesXGrupo = EstudiantesXGrupo #[['IDEstudiante','Nombre Estudiante','Apellidos','Nombre Profesor','IDGrupo','IDProfe','Activ','IdMater']]
@@ -391,7 +391,6 @@ def consultaNotas( TblEstudiantes:pd.DataFrame, TblNotas:pd.DataFrame, TblMateri
  
 #------------------ FIN CONSULTA DE NOTAS ESTUDIANTES    ---------------------------
 
-
 #Funcion para calcular el promedio por materia y la Nota final del Ciclo
 def consultaPromedios(tblEstudiantes,tblNotas,tblMaterias,idEstudiante = 0):
     '''
@@ -455,7 +454,6 @@ def consultaPromedios(tblEstudiantes,tblNotas,tblMaterias,idEstudiante = 0):
 # Genera un nuevo consecutivo secuencial para segun la tabla
 # Materias, o Tabla Notas, o Tabla Grupo al momento del usuario ingresar una nueva materia
 
-
 def crearConsecutivoIDNumerico(tabla:pd.DataFrame, columna:str = 0 )-> int:
     '''
     Args:
@@ -476,7 +474,7 @@ def ConsultarIDProfesor(Diccionario_Profesores: dict, IDProfesor):
 def crearIDProfesor(Diccionario_Profesores:dict):
     lista =[]
     for llave in Diccionario_Profesores.keys():
-        letra, numero = llave[0], int(llave[1:])
+        numero = int(llave[1:])
         lista.append(numero)
     Nmax = max(lista)
     nuevoID = Nmax + 1
@@ -487,24 +485,6 @@ def crearIDProfesor(Diccionario_Profesores:dict):
         return "CrearCodigoManual"
 
 #------------------ FIN SABER EL ULTIMO CONSECUTIVO DE LA TABLA MATERIA    ---------------------------
-
-def guardaCambios (self, materiaActualizada):
-    #Lee el csv y lo guarda en el archivo leerDoc
-    leerDoc = pd.read_csv('Materias.csv', sep = ";")
-    #extrae los nombres de las columnas del dataframe
-    filaCambio = list(leerDoc.columns)
-    #extra el valor de la primera columna, en este caso "IDMateria"
-    filaModificar = filaCambio[0]
-    #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
-    IDMateriaFila = materiaActualizada[0]
-    #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
-    leerDoc.loc[leerDoc[filaModificar] == IDMateriaFila] = materiaActualizada
-    #Escribe los cambios en el csv
-    leerDoc.to_csv('Materias.csv', index = False)
-    #Retorna el archivo modificado
-    return leerDoc
-
-#------------------ FIN funciones para Crear Diccionarios de Objetos    ---------------------------
 
 #-------------------------Se crean la funcion para validar el ID de los estudiantes y/o crear uno nuevo------------------------------
 
@@ -532,4 +512,4 @@ def crearIDEstudiante(Diccionario_Estudiantes:dict, nombres : str, apellidos:str
         print("Cree codigo manualmente")
     else:
         return nID
-
+    
