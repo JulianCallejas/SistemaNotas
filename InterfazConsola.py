@@ -8,7 +8,7 @@ try:
     tabactive = True
 except :
     tabactive = False
- 
+    
 from os import system as dossystem, truncate  #añadida para limpiar consola
 #dossystem('mode con: cols=175 lines=1500')
 
@@ -60,7 +60,7 @@ def menuAgregar():
     return opciones
 
 #Funcion para pantalla Agregar Materia (0,1,1)
-def menuAgregarMateria(creaID, tblMaterias):
+def menuAgregarMateria(creaID, tblMaterias, Materia, dic_materias):
     limpiapantalla()
     opciones = 1
     mater = ""
@@ -126,7 +126,386 @@ def menuAgregarMateria(creaID, tblMaterias):
     print("| Creditos:  ", cred)
     print(" --------------------------------------------------------- ")
     confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
-    ###########Agregar el codigo para crear objeto y guardar objeto en archivo CVS
+    if confirma == '1':
+            try:
+                dic_materias[id] = Materia([idm,mater,cicl,cred])
+                tblMaterias = dic_materias[id].agregaRegistro()
+                opciones = (1,('tblMaterias',tblMaterias))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    print(" --------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                              |")
+    print("| 9. Volver al menu principal                             |")
+    print(" --------------------------------------------------------- ")
+    return opciones
+
+#Funcion para pantalla Agregar Grupo (0,1,2)   
+def menuAgregarProfesor(crearIDProfesor, tblProfesores, Profesor,dic_profesores):
+    limpiapantalla()
+    opciones = 1
+    IDProfesor = ""
+    Nombre = ""
+    IDMateria = ""
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                    AGREGAR PROFESOR                      |")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el nombre completo del profesor a agregar: ")
+    while Nombre == "":
+        Nombre = input("|  ")
+        if Nombre.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|               AGREGAR PROFESOR CANCELADO                 |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif Nombre == "":
+            print("| Nombre no valido")
+            print("| Ingrese el nombre completo del profesor a agregar o escriba SALIR para cancelar: ")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el id de las materias que el profesor dictara separados por coma 1,2,5,7: ")
+    while IDMateria == "":
+        IDMateria = input("|  ")
+        if IDMateria.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|               AGREGAR PROFESOR CANCELADO                 |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif IDMateria == "":
+            print("| ID de materias no valido")
+            print("| Ingrese el id de las materias que el profesor dictara separados por coma 1,2,5,7; o escriba SALIR para cancelar: ")
+            IDMateria = ""
+    print(" ---------------------------------------------------------- ")
+    IDProfesor = crearIDProfesor(dic_profesores)
+    print(IDProfesor)
+    print(" --------------------------------------------------------- ")
+    print("| Id Profesor:   ", IDProfesor)
+    print("| Nombre:        ", Nombre)
+    print("| ID Materias:   ", IDMateria)
+    print(" --------------------------------------------------------- ")
+    confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+    if confirma == '1':
+            try:
+                dic_profesores[IDProfesor] = Profesor([IDProfesor,Nombre,IDMateria])
+                tblProfesores = dic_profesores[IDProfesor].agregaRegistro()
+                opciones = (1,('tblProfesores',tblProfesores))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    print(" --------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                              |")
+    print("| 9. Volver al menu principal                             |")
+    print(" --------------------------------------------------------- ")
+    return opciones
+
+#Funcion para pantalla Agregar Grupo (0,1,3) 
+def menuAgregarGrupo(creaID, tblGrupos, Grupo, dic_grupos):
+    limpiapantalla()
+    opciones = 1
+    Periodo = ""
+    Horario = ""
+    Activo = "1"
+    IDMaterias = 0
+    IDProfesores = ""
+    IDGrupo = ""
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                     AGREGAR GRUPO                        |")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el periodo (año) de estudio del grupo: ")
+    while Periodo == "":
+        Periodo = input("|  ")
+        if Periodo.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                AGREGAR GRUPO CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif Periodo == "":
+            print("| Periodo no valido")
+            print("| Ingrese el periodo (año) de estudio del grupo o escriba SALIR para cancelar: ")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese la franja horaria de estudio mañana, tarde, noche: ")
+    while Horario == "":
+        Horario = input("|  ").lower()
+        if Horario.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                AGREGAR GRUPO CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif Horario == "" or Horario not in ["mañana","tarde","noche"]:
+            print("| Horario no valido")
+            print("| Ingrese la franja horaria de estudio mañana, tarde, noche; o escriba SALIR para cancelar: ")
+            Horario = ""
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el ID de las materias a cursar en orden ")
+    print("| el orden predeterminado es: 1,5,9,2,6,10,3,7,11,4,8,12")
+    print("| si desea conservar este orden oprima enter, de lo contrario ingrese el nuevo orden:")
+    while IDMaterias == 0:
+        IDMaterias = input("|  ")
+        if IDMaterias.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                AGREGAR GRUPO CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif IDMaterias == "" :
+            IDMaterias = "1,5,9,2,6,10,3,7,11,4,8,12"
+        elif IDMaterias == 0:
+            print("| Materias no validas")
+            print("| Ingrese el ID de las materias a cursar en orden; o escriba SALIR para cancelar: ")
+            IDMaterias = 0
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el ID de los profesores que dictaran las materias en el mismo orden de las materias:")
+    while IDProfesores == "":
+        IDProfesores = input("|  ").upper()
+        if IDProfesores.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                AGREGAR GRUPO CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif IDProfesores == "":
+            print("| Profesores no validos")
+            print("| Ingrese el ID de los profesores que dictaran las materias en el mismo orden de las materias")
+            print("| o escriba SALIR para cancelar: ")
+            IDProfesores = ""
+    IDGrupo = creaID(tblGrupos,"IDGrupo")
+    print(" --------------------------------------------------------- ")
+    print("| ID Grupo:      ", IDGrupo )
+    print("| Periodo:       ", Periodo )
+    print("| Horario:       ", Horario)
+    print("| Activo:        ", Activo)
+    print("| ID Materias:   ", IDMaterias)
+    print("| ID Profesores: ", IDProfesores)
+    print(" --------------------------------------------------------- ")
+    confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+    if confirma == '1':
+            try:
+                dic_grupos[IDGrupo] = Grupo([IDGrupo, Periodo, Horario, Activo, IDMaterias, IDProfesores])
+                tblGrupos = dic_grupos[IDGrupo].agregaRegistro()
+                opciones = (1,('tblGrupos',tblGrupos))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    print(" --------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                              |")
+    print("| 9. Volver al menu principal                             |")
+    print(" --------------------------------------------------------- ")
+    return opciones
+
+#Funcion para pantalla Agregar Estudiante (0,1,4)   IDEstudiante;Nombres;Apellidos;Email;IDGrupo
+def menuAgregarEstudiante(creaID, tblEstudiantes, Estudiante, dic_estudiantes):
+    limpiapantalla()
+    opciones = 1
+    Nombres = ""
+    Apellidos = ""
+    Email = ""
+    IDGrupo = ""
+    IDEstudiante = ""
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                   AGREGAR ESTUDIANTE                     |")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el nombre del estudiante: ")
+    while Nombres == "":
+        Nombres = input("|  ")
+        if Nombres.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|             AGREGAR ESTUDIANTE CANCELADO                 |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif Nombres == "":
+            print("| Nombres no valido")
+            print("| Ingrese el nombre del estudiante o escriba SALIR para cancelar: ")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese los apellidos del estudiante: ")
+    while Apellidos == "":
+        Apellidos = input("|  ")
+        if Apellidos.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|             AGREGAR ESTUDIANTE CANCELADO                 |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif Apellidos == "":
+            print("| Apellidos no valido")
+            print("| Ingrese los apellidos del estudiante o escriba SALIR para cancelar: ")
+            Apellidos = ""
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el Email del estudiante: ")
+    while Email == "":
+        Email = input("|  ")
+        if Email.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|             AGREGAR ESTUDIANTE CANCELADO                 |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif Email == "" or "@" and "." not in Email:
+            print("| Email no valido")
+            print("| Ingrese el Email del estudiante o escriba SALIR para cancelar: ")
+            Email = ""
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el ID del grupo al que asignara al estudiante:")
+    while IDGrupo == "":
+        IDGrupo = input("|  ").upper()
+        if IDGrupo.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|             AGREGAR ESTUDIANTE CANCELADO                 |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif IDGrupo == "" or not IDGrupo.isnumeric():
+            print("| Grupo no valido")
+            print("| Ingrese el ID del grupo al que asignara al estudiante o escriba SALIR para cancelar: ")
+            IDGrupo = ""
+    IDEstudiante = creaID(dic_estudiantes, Nombres, Apellidos)
+    print(" --------------------------------------------------------- ")
+    print("| ID Estudiante: ", IDEstudiante )
+    print("| Nombres:       ", Nombres )
+    print("| Apellidos:     ", Apellidos)
+    print("| Email:         ", Email)
+    print("| Grupo:         ", IDGrupo)
+    print(" --------------------------------------------------------- ")
+    confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+    if confirma == '1':
+            try:
+                dic_estudiantes[IDEstudiante] = Estudiante([IDEstudiante, Nombres, Apellidos, Email, IDGrupo])
+                tblEstudiantes = dic_estudiantes[IDEstudiante].agregaRegistro()
+                opciones = (1,('tblEstudiantes',tblEstudiantes))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    print(" --------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                              |")
+    print("| 9. Volver al menu principal                             |")
+    print(" --------------------------------------------------------- ")
+    return opciones
+
+#Funcion para pantalla Agregar Nota (0,1,5)  IdNota;IDEstudiante;Nota;IDMateria
+def menuAgregarNota(creaID, tblNotas, Nota, dic_notas, dic_estudiantes, dic_materias):
+    limpiapantalla()
+    opciones = 1
+    IDEstudiante = ""
+    IDMateria = ""
+    calificacion = ""
+    IdNota = ""
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                     AGREGAR NOTA                         |")
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el Id del estudiante: ")
+    while IDEstudiante == "":
+        IDEstudiante = input("|  ").upper()
+        if IDEstudiante.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                 AGREGAR NOTA CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif IDEstudiante == "" or IDEstudiante not in dic_estudiantes.keys() :
+            print("| ID de estudiante no valido")
+            print("| Ingrese el Id del estudiante o escriba SALIR para cancelar: ")
+            IDEstudiante = ""
+    print("| ", dic_estudiantes[IDEstudiante] )
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese el Id de la materia: ")
+    while IDMateria == "":
+        IDMateria = input("|  ")
+        if IDMateria.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                 AGREGAR NOTA CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif IDMateria == "" or IDMateria not in dic_materias.keys():
+            print("| Id Materia no valido")
+            print("| Ingrese el Id de la materia o escriba SALIR para cancelar: ")
+            IDMateria = ""
+    print("| ", dic_materias[IDMateria] )
+    print(" ---------------------------------------------------------- ")
+    print("| Ingrese la nota (entre 0 y 5): ")
+    while calificacion == "":
+        calificacion = input("|  ")
+        if calificacion.upper() == "SALIR":
+            print(" ---------------------------------------------------------- ")
+            print("|                 AGREGAR NOTA CANCELADO                   |")
+            print(" ---------------------------------------------------------- ")
+            print("| 0. Volver al menu anterior                               |")
+            print("| 9. Volver al menu principal                              |")
+            print(" ---------------------------------------------------------- ")
+            return opciones
+        elif calificacion == "" or  float(calificacion) < 0 or  float(calificacion)> 5:
+            print("| Nota no valida")
+            print("| Ingrese la nota (entre 0 y 5) o escriba SALIR para cancelar: ")
+            calificacion = ""
+           
+    IdNota = creaID(tblNotas,"IdNota")
+    IdNota = str(IdNota)
+    print(" --------------------------------------------------------- ")
+    print("| Id Nota:       ", IdNota)
+    print("| Estudiante:    ", dic_estudiantes[IDEstudiante])
+    print("| Materia:       ", dic_materias[IDMateria])
+    print("| Nota:          ", calificacion)
+    print(" --------------------------------------------------------- ")
+    confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+    if confirma == '1':
+            try:
+                dic_notas[IdNota] = Nota([IdNota,IDEstudiante,calificacion,IDMateria])
+                tblNotas = dic_notas[IdNota].agregaRegistro()
+                opciones = (1,('tblNotas',tblNotas))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
     print(" --------------------------------------------------------- ")
     print("| 0. Volver al menu anterior                              |")
     print("| 9. Volver al menu principal                             |")
@@ -173,7 +552,7 @@ def menuConsultarMaterias():
     return opciones
 
 #Funcion para imprimir Lista de Materias (0,2,1,1)
-def InformeListadoMaterias(tblMaterias ):
+def InformeListadoMaterias(tblMaterias):
     tblMaterias = tblMaterias.set_index('IDMateria')
     limpiapantalla()
     opciones = 1
@@ -189,6 +568,7 @@ def InformeListadoMaterias(tblMaterias ):
     print("| 0. Volver al menu anterior                                    |")
     print("| 9. Volver al menu principal                                   |")
     print(" --------------------------------------------------------------- ")
+    tblMaterias = tblMaterias.reset_index()
     return opciones
 
 #Funcion para imprimir Lista de Materias (0,2,1,2)
@@ -289,14 +669,15 @@ def InformeGruposActivosXProfesor(informe, tblEstudiantes, tblGrupos, tblProfeso
 #Funcion para imprimir en pantalla el subMenu Consultar Grupos (0,2,3)
 def menuConsultarGrupos():
     limpiapantalla()
-    opciones = 3
+    opciones = 4
     print(Version)
     print(" ---------------------------------------------------------- ")
     print("|                   Consultar Grupos                       |")
     print(" ---------------------------------------------------------- ")
     print("|                                                          |")
-    print("| 1. Listado de grupos                                     |")
-    print("| 2. Listado detallado de grupos activos                   |")
+    print("| 1. Tabla de grupos                                       |")
+    print("| 2. Listado de grupos                                     |")
+    print("| 3. Listado detallado de grupos activos                   |")
     print("| 0. Volver al menu anterior                               |")
     print("| 9. Volver al menu principal                              |")
     print("|                                                          |")
@@ -306,6 +687,33 @@ def menuConsultarGrupos():
 
 
 #Funcion para imprimir Listado de Grupos (0,2,3,1)
+def InformeListadoTablaGrupos(tblGrupos):
+    limpiapantalla()
+    tblGrupos = tblGrupos.set_index("IDGrupo")
+    opciones = 1
+    print(Version)
+    print(" --------------------------------------------------------------------- ")
+    print("|                    LISTADO TABLA DE GRUPOS                          |")
+    print(" --------------------------------------------------------------------- ")
+    if tabactive:
+        print(tabulate(tblGrupos, headers='keys', tablefmt = 'psql' ),"\n")
+    else:
+        if len(tblGrupos) > 100:
+            for paginas in range(0,int(len(tblGrupos)/100)):
+                ini = paginas * 100
+                fin = ini + 100
+                print(tblGrupos['IDGrupo'].iloc[ini:fin],"\n")
+        else:
+            print(tblGrupos,"\n")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    tblGrupos = tblGrupos.reset_index()
+    return opciones
+
+
+#Funcion para imprimir Listado de Grupos (0,2,3,2)
 def InformeListadoGrupos(informe, tblEstudiantes, tblGrupos, tblProfesores):
     limpiapantalla()
     listado = informe(tblEstudiantes, tblGrupos, tblProfesores)
@@ -332,9 +740,12 @@ def InformeListadoGrupos(informe, tblEstudiantes, tblGrupos, tblProfesores):
     print("| 0. Volver al menu anterior                                          |")
     print("| 9. Volver al menu principal                                         |")
     print(" --------------------------------------------------------------------- ")
+    tblEstudiantes = tblEstudiantes.reset_index()
+    tblGrupos = tblGrupos.reset_index()
+    tblProfesores = tblProfesores.reset_index()
     return opciones
 
-#Funcion para imprimir Listado Detallado de Grupos (0,2,3,2)
+#Funcion para imprimir Listado Detallado de Grupos (0,2,3,3)
 def InformeListadoDetalladoGrupos(informe, tblEstudiantes, tblGrupos, tblProfesores):
     limpiapantalla()
     listado = informe(tblEstudiantes, tblGrupos, tblProfesores)
@@ -611,23 +1022,339 @@ def menuModificar():
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
 
+
+#Menu para modificar materias (0,3,1)
+def menuModificarMaterias (tblMaterias:pd.DataFrame,existeID,Materia:object,dic_materias):
+    limpiapantalla()
+    opciones = 1
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                  Modificar materias                      |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id de la materia que desea modificar: "))
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblMaterias, "IDMateria", id):
+        print(" ---------------------------------------------------------- ")
+        print("Materia a modificar: ")
+        print(tblMaterias.set_index("IDMateria").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        #Recolectar los nuevos datos        
+        nuevaMateria = str(input("| Ingrese la nueva Materia: "))
+        if nuevaMateria == "":
+            nuevaMateria = tblMaterias.set_index("IDMateria")["Materia"][id]
+        nuevoCiclo = "_"
+        while nuevoCiclo == "_":                 
+            nuevoCiclo = str(input("| Ingrese el numero del nuevo ciclo entre 1, 2, 3 o 4: "))
+            if nuevoCiclo == "":
+                nuevoCiclo = tblMaterias.set_index("IDMateria")["Ciclo"][id]
+            elif nuevoCiclo not in ["1","2","3","4"]:
+                nuevoCiclo = "_"
+                print("| Ciclo no valido")
+        nuevoCreditos = "_"
+        while nuevoCreditos == "_":   
+            nuevoCreditos = str(input("| Ingrese el nuevo número de creditos (de 1 a 10): "))     
+            if nuevoCreditos == "":
+                nuevoCreditos = tblMaterias.set_index("IDMateria")["Creditos"][id]
+            elif nuevoCreditos not in ["1","2","3","4","5","6","7","8","9","10"]:
+                nuevoCreditos = "_"
+                print("| Numero de creditos no valido")        
+        materiaActualizada = [id, nuevaMateria, nuevoCiclo, nuevoCreditos ]   
+        print(" --------------------------------------------------------- ")
+        print("| Id Materia:", id)
+        print("| Materia:   ", nuevaMateria)
+        print("| Ciclo:     ", nuevoCiclo)
+        print("| Creditos:  ", nuevoCreditos)
+        print(" --------------------------------------------------------- ")
+        confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+        if confirma == '1':
+            try:
+                dic_materias[id] = Materia(materiaActualizada)
+                tblMaterias = dic_materias[id].guardaCambios()
+                opciones = (1,('tblMaterias',tblMaterias))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    else:
+        print("| No ha sido encontrada la Materia para modificar!")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+
+# Menu para modificar profesores (0,3,2)
+def menuModificarProfesores(tblProfesores:pd.DataFrame,existeID,Profesor:object,dic_profesores):
+    limpiapantalla()
+    opciones = 1
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|               Modificar profesores                      |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id del profesor que desea modificar: ")).upper()
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblProfesores, "IDProfesor", id):
+        print(" ---------------------------------------------------------- ")
+        print("Profesor a modificar: ")
+        print(tblProfesores.set_index("IDProfesor").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        #Recolectar los nuevos datos        
+        nuevoNombre = str(input("| Ingrese el nuevo nombre: "))
+        if nuevoNombre == "":
+            nuevoNombre = tblProfesores.set_index("IDProfesor")["Nombre"][id]
+        nuevoIDMateria = str(input("| Ingrese los id de materias que dicta el profesor separados por coma: "))
+        if nuevoIDMateria == "":
+            nuevoIDMateria = tblProfesores.set_index("IDProfesor")["IDMateria"][id]
+        profesorActualizado = [id, nuevoNombre, nuevoIDMateria ]   
+        print(" --------------------------------------------------------- ")
+        print("| Id Profesor:       ", id)
+        print("| Nombre:            ", nuevoNombre)
+        print("| Materias a dictar: ", nuevoIDMateria)
+        print(" --------------------------------------------------------- ")
+        confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+        if confirma == '1':
+            try:
+                dic_profesores[id] = Profesor(profesorActualizado)
+                tblProfesores = dic_profesores[id].guardaCambios()
+                opciones = (1,('tblProfesores',tblProfesores))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    else:
+        print("| No ha sido encontrado el profesor para modificar!")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+# Menu para modificar grupos (0,3,3)
+def menuModificarGrupos(tblGrupos:pd.DataFrame,existeID,Grupo:object,dic_grupos):
+    limpiapantalla()
+    opciones = 1
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                  Modificar Grupos                      |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id del grupo que desea modificar: "))
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblGrupos, "IDGrupo", id):
+        print(" ---------------------------------------------------------- ")
+        print("Grupo a modificar: ")
+        print(tblGrupos.set_index("IDGrupo").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        #Recolectar los nuevos datos        
+        nuevoPeriodo = str(input("| Ingrese el nuevo periodo: "))
+        if nuevoPeriodo == "":
+            nuevoPeriodo = tblGrupos.set_index("IDGrupo")["Periodo"][id]
+        nuevoHorario = "_"
+        while nuevoHorario == "_":                
+            nuevoHorario = str(input("| Ingrese el nuevo horario (mañana, tarde o noche): "))
+            if nuevoHorario == "":
+                nuevoHorario = tblGrupos.set_index("IDGrupo")["Horario"][id]
+            elif nuevoHorario not in ["mañana", "tarde", "noche"]:
+                nuevoHorario = "_"
+                print("| Horario no valido")
+        nuevoEstado = "_"        
+        while nuevoEstado =="_":
+            nuevoEstado = str(input("| Ingrese el nuevo estado (Activo: 1 o Inactivo: 0): "))     
+            if nuevoEstado == "":
+                nuevoEstado = tblGrupos.set_index("IDGrupo")["Activo"][id]
+            elif nuevoEstado not in ["0","1"]:
+                nuevoEstado = "_"
+                print("| Estado no valido")
+        nuevoMaterias = "1,5,9,2,6,10,3,7,11,4,8,12"
+        nuevoProfesor = str(input("| Ingrese los nuevos profesores del grupo: "))     
+        if nuevoProfesor == "":
+            nuevoProfesor = tblGrupos.set_index("IDGrupo")["IDProfesores"][id]
+        grupoActualizado = [id, nuevoPeriodo, nuevoHorario, nuevoEstado, nuevoMaterias, nuevoProfesor ]   
+        print(" --------------------------------------------------------- ")
+        print("| ID Grupo:      ", id)
+        print("| Periodo:       ", nuevoPeriodo)
+        print("| Horario:       ", nuevoHorario)
+        print("| Activo:        ", nuevoEstado)
+        print("| IDMaterias:    ", nuevoMaterias)
+        print("| IDProfesores:  ", nuevoProfesor)
+        print(" --------------------------------------------------------- ")
+        confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+        if confirma == '1':
+            try:
+                dic_grupos[id] = Grupo(grupoActualizado)
+                tblGrupos = dic_grupos[id].guardaCambios()
+                opciones = (1,('tblGrupos',tblGrupos))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    else:
+        print("No ha sido encontrado el grupo para modificar!")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+    
+    
+# Menu para modificar estudiantes (0,3,4)
+def menuModificarEstudiantes(tblEstudiantes:pd.DataFrame,existeID,Estudiante:object, dic_estudiantes):
+    limpiapantalla()
+    opciones = 5
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|               Modificar Estudiantes                      |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id del estudiante que desea modificar: ")).upper()
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblEstudiantes, "IDEstudiante", id):
+        print(" ---------------------------------------------------------- ")
+        print("Estudiante a modificar: ")
+        print(tblEstudiantes.set_index("IDEstudiante").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        #Recolectar los nuevos datos        
+        nuevoNombre = str(input("| Ingrese los nuevos nombres: "))
+        if nuevoNombre == "":
+            nuevoNombre = tblEstudiantes.set_index("IDEstudiante")["Nombres"][id]
+        nuevoApellido = str(input("| Ingrese los nuevos apellidos: "))
+        if nuevoApellido == "":
+            nuevoApellido = tblEstudiantes.set_index("IDEstudiante")["Apellidos"][id]
+        nuevoEmail = "_"
+        while nuevoEmail == "_":
+            nuevoEmail = str(input("| Ingrese el nuevo Email: "))
+            if nuevoEmail == "":
+                nuevoEmail = tblEstudiantes.set_index("IDEstudiante")["Email"][id]
+            elif "@" and ".com" not in nuevoEmail:
+                nuevoEmail = "_"
+                print("| Email no valido")
+        nuevoGrupo = str(input("| Ingrese el id del nuevo grupo: "))
+        if nuevoGrupo == "":
+            nuevoGrupo = tblEstudiantes.set_index("IDEstudiante")["IDGrupo"][id]
+        estudianteActualizado = [id, nuevoNombre, nuevoApellido, nuevoEmail, nuevoGrupo ]   
+        print(" --------------------------------------------------------- ")
+        print("| ID Estudiante: ", id)
+        print("| Nombre:        ", nuevoNombre)
+        print("| Apellido:      ", nuevoApellido)
+        print("| Email:         ", nuevoEmail)
+        print("| Grupo:         ", nuevoGrupo)
+        print(" --------------------------------------------------------- ")
+        confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+        if confirma == '1':
+            try:
+                dic_estudiantes[id] = Estudiante(estudianteActualizado)
+                tblEstudiantes = dic_estudiantes[id].guardaCambios()
+                opciones = (1,('tblEstudiantes',tblEstudiantes))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    else:
+        print("| No ha sido encontrado el estudiante para modificar!")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+# Menu para modificar notas(0,3,5)
+def menuModificarNotas(tblNotas:pd.DataFrame, existeID, tblEstudiantes, tblMaterias, Nota:object, dic_notas):
+    limpiapantalla()
+    opciones = 5
+    print(Version)
+    print(" ---------------------------------------------------------- ")
+    print("|                  Modificar Notas                         |")
+    print(" ---------------------------------------------------------- ")
+    id = str(input("| Ingrese el id de la nota que desea modificar:  "))
+    #Revisar si se encuentra el elemento solicitado     
+    if existeID(tblNotas, "IdNota", id):
+        print(" ---------------------------------------------------------- ")
+        print("Nota a modificar: ")
+        print(tblNotas.set_index("IdNota").loc[id].to_string())
+        print(" ---------------------------------------------------------- ")
+        #Recolectar los nuevos datos
+        nuevoEstudiante = "_"
+        while nuevoEstudiante == "_":        
+            nuevoEstudiante = str(input("| Ingrese el id del nuevo estudiante: "))
+            if nuevoEstudiante == "":
+                    nuevoEstudiante = tblNotas.set_index("IdNota")["IDEstudiante"][id]
+            elif existeID(tblEstudiantes, "IDEstudiante", nuevoEstudiante):
+                pass
+            else:
+                print("| No ha sido encontrado el id del nuevo estudiante!")
+                nuevoEstudiante = "_"
+        nuevaNota = "_"
+        while nuevaNota == "_":                
+            nuevaNota = str(input("| Ingrese la nueva nota (de 0 a 5): "))
+            if nuevaNota == "":
+                nuevaNota = tblNotas.set_index("IdNota")["Nota"][id]
+            elif float(nuevaNota) not in [x / 100.0 for x in range(0, 501)]:
+                print("| La nota no es valida")
+                nuevaNota = "_"
+        nuevaMateria = "_"
+        while nuevaMateria == "_":    
+            nuevaMateria = str(input("| Ingrese el id de la nueva materia: "))     
+            if nuevaMateria == "":
+                nuevaMateria = tblNotas.set_index("IdNota")["IDMateria"][id]
+            elif existeID(tblMaterias, "IDMateria", nuevaMateria):
+                pass
+            else:
+                print("| No ha sido encontrado el id de la nueva materia!")
+                nuevaMateria = "_"
+        notaActualizada = [id, nuevoEstudiante, nuevaNota, nuevaMateria]  
+        print(" --------------------------------------------------------- ")
+        print("| ID Nota:       ", id)
+        print("| ID Estudiante: ", nuevoEstudiante)
+        print("| Nota:          ", nuevaNota)
+        print("| IdMateria:     ", nuevaMateria)
+        print(" --------------------------------------------------------- ")
+        confirma = input("| Ingrese 1 para confirmar o 0 para cancelar: ")
+        if confirma == '1':
+            try:
+                dic_notas[id] = Nota(notaActualizada)
+                tblNotas = dic_notas[id].guardaCambios()
+                opciones = (1,('tblNotas',tblNotas))
+                print(" --------------------------------------------------------------------- ")
+                print("| REGISTRO GUARDADO CON EXITO                                         |")
+                print(" --------------------------------------------------------------------- ")
+            except:
+                print(" --------------------------------------------------------------------- ")
+                print("| ERROR AL GUARDAR LA INFORMACION, REVISE LOS DATOS INGRESADOS        |")
+                print(" --------------------------------------------------------------------- ")
+    else:
+        print("| No ha sido encontrada la nota para modificar!")
+    print(" --------------------------------------------------------------------- ")
+    print("| 0. Volver al menu anterior                                          |")
+    print("| 9. Volver al menu principal                                         |")
+    print(" --------------------------------------------------------------------- ")
+    return opciones
+
+
  #Funcion para imprimir en pantalla el Menu Eliminar (0,4)
 def menuEliminar():
     limpiapantalla()
-    opciones = 6
+    opciones = 1
     print(Version)
-    print(" ---------------------------------------------------------- ")
-    print("|               Eliminar Información                       |")
-    print(" ---------------------------------------------------------- ")
-    print("|                                                          |")
-    print("| 1. Eliminar Materias                                     |")
-    print("| 2. Eliminar Profesores                                   |")
-    print("| 3. Eliminar Grupos                                       |")
-    print("| 4. Eliminar Estudiantes                                  |")
-    print("| 5. Eliminar Notas                                        |")
-    print("| 0. Volver al menu anterior                               |")
-    print("|                                                          |")
-    print(" ---------------------------------------------------------- ")
+    print(" -------------------------------------------------------------- ")
+    print("|                   Eliminar Información                       |")
+    print(" -------------------------------------------------------------- ")
+    print("|                                                              |")
+    print("| ¡LA OPCION PARA ELIMINAR NO ESTA DISPONIBLE POR SEGURIDAD!   |")
+    print("| 0. Volver al menu anterior                                   |")
+    print("| 9. Volver al menu principal                                  |")
+    print("|                                                              |")
+    print(" -------------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
     return opciones
     
@@ -647,296 +1374,3 @@ def menuFallaCarga():
     print("|                                                          |")
     print(" ---------------------------------------------------------- ")
     print("| Ingrese el número de la acción que desea realizar: ")
-
-
-#Se crea un diccionario con la ruta y lista de las funciones de los menus para ser llamadas automaticamente
-DicMenu = {(0,)   :     menuInicial,
-           (0,1)  :     menuAgregar,     #0 es el menu principal y 1 es la opcion 1 Agregar del menu principal por tanto la llave de esta funcion es (0,1)
-          #(0,1,1) :    (ic.menuAgregarMateria,crud.crearConsecutivoIDNumerico, tblMaterias),
-           (0,2)  :     menuConsultar,
-           (0,2,1) :    menuConsultarMaterias,
-          #(0,2,1,1):   (ic.InformeListadoMaterias,tblMaterias),
-          #(0,2,1,2):   (ic.InformeMateriasXCiclo,crud.consultaMateriasXCiclo,tblMaterias),
-          #(0,2,1,3):   (ic.InformeProfesoresXMateria, crud.consultaMateriasXProfesor)
-           (0,2,2) :    menuConsultarProfesores,
-          #(0,2,2,1) :  (ic.InformeListadoProfesores, crud.consultaMateriasXProfesor, tblProfesores, tblMaterias ),
-          #(0,2,2,2) :  InformeGruposActivosXProfesor
-           (0,2,3) :    menuConsultarGrupos,
-          #(0,2,3,1) :  (ic.InformeListadoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
-          #(0,2,3,2) :  (ic.InformeListadoDetalladoGrupos, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
-           (0,2,4) :    menuConsultarEstudiantes,
-          #(0,2,4,1) :  (ic.InformeListadoDeEstudiantes, crud.consultaEstudiantesXProfesor,tblEstudiantes, tblGrupos, tblProfesores),
-          #(0,2,4,2):   (ic.InformeEstudiantesXGrupo, crud.consultaEstudiantesXGrupo ,tblEstudiantes,tblGrupos),
-          #(0,2,4,3) :  (ic.InformeListadoNotasXEstudiantes, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
-          #(0,2,4,4) :  (ic.InformeListadoPromediosXEstudiantes, crud.consultaPromedios,tblEstudiantes, tblNotas, tblMaterias ),
-           (0,2,5) :    menuConsultarNotas,
-          #(0,2,5,1) :  (ic.InformeListadoGeneralNotas, crud.consultaNotas, tblEstudiantes, tblNotas, tblMaterias),
-           (0,3)   :    menuModificar,
-          #(0,3,1) :    (ic.menuModificarMaterias, tblMaterias, crud.existeID),
-          #(0,3,2) :    (ic.menuModificarProfesores, tblProfesores, crud.existeID),           
-           (0,4)   :    menuEliminar,
-           
-    }
-
-#Menu para modificar materias (0,3,1)
-def menuModificarMaterias (tblMaterias:pd.DataFrame,existeID):
-    limpiapantalla()
-    opciones = 5
-    print(Version)
-    
-    print(" ---------------------------------------------------------- ")
-    print("|                  Modificar materias                      |")
-    print(" ---------------------------------------------------------- ")
-    id = str(input("| Ingrese el id de la materia que desea modificar: "))
-    
-    #Revisar si se encuentra el elemento solicitado     
-    if existeID(tblMaterias, "IDMateria", id):
-        print(" ---------------------------------------------------------- ")
-        print("Materia a modificar: ")
-        print(tblMaterias.set_index("IDMateria").loc[id].to_string())
-        print(" ---------------------------------------------------------- ")
-
-        #Recolectar los nuevos datos        
-        nuevaMateria = str(input("| Ingrese la nueva Materia: "))
-        if nuevaMateria == "":
-            nuevaMateria = tblMaterias.set_index("IDMateria")["Materia"][id]
-        
-        nuevoCiclo = "_"
-        while nuevoCiclo == "_":                 
-            nuevoCiclo = str(input("| Ingrese el numero del nuevo ciclo entre 1, 2, 3 o 4: "))
-            if nuevoCiclo == "":
-                nuevoCiclo = tblMaterias.set_index("IDMateria")["Ciclo"][id]
-            elif nuevoCiclo not in ["1","2","3","4"]:
-                nuevoCiclo = "_"
-                print("| Ciclo no valido")
-        
-        nuevoCreditos = "_"
-        while nuevoCreditos == "_":   
-            nuevoCreditos = str(input("| Ingrese el nuevo número de creditos (de 1 a 10): "))     
-            if nuevoCreditos == "":
-                nuevoCreditos = tblMaterias.set_index("IDMateria")["Creditos"][id]
-            elif nuevoCreditos not in ["1","2","3","4","5","6","7","8","9","10"]:
-                nuevoCreditos = "_"
-                print("| Numero de creditos no valido")        
-        
-        materiaActualizada = [id, nuevaMateria, nuevoCiclo, nuevoCreditos ]   
-        print(materiaActualizada)
-    else:
-        print("| No ha sido encontrada la Materia para modificar!")
-        
-    print(" --------------------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                                          |")
-    print("| 9. Volver al menu principal                                         |")
-    print(" --------------------------------------------------------------------- ")
-    
-    return opciones
-
-# Menu para modificar profesores (0,3,2)
-def menuModificarProfesores(tblProfesores:pd.DataFrame,existeID):
-    limpiapantalla()
-    opciones = 5
-    print(Version)
-    
-    print(" ---------------------------------------------------------- ")
-    print("|               Modificar profesores                      |")
-    print(" ---------------------------------------------------------- ")
-    id = str(input("| Ingrese el id del profesor que desea modificar: "))
-    
-    #Revisar si se encuentra el elemento solicitado     
-    if existeID(tblProfesores, "IDProfesor", id):
-        print(" ---------------------------------------------------------- ")
-        print("Profesor a modificar: ")
-        print(tblProfesores.set_index("IDProfesor").loc[id].to_string())
-        print(" ---------------------------------------------------------- ")
-        
-        #Recolectar los nuevos datos        
-        nuevoNombre = str(input("| Ingrese el nuevo nombre: "))
-        if nuevoNombre == "":
-            nuevoNombre = tblProfesores.set_index("IDProfesor")["Nombre"][id]
-                        
-        nuevoIDMateria = str(input("| Ingrese los id de materias que dicta el profesor: "))
-        if nuevoIDMateria == "":
-            nuevoIDMateria = tblProfesores.set_index("IDProfesor")["IDMateria"][id]
-                
-        profesorActualizado = [id, nuevoNombre, nuevoIDMateria ]   
-        print(profesorActualizado)
-    else:
-        print("| No ha sido encontrado el profesor para modificar!")
-        
-    print(" --------------------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                                          |")
-    print("| 9. Volver al menu principal                                         |")
-    print(" --------------------------------------------------------------------- ")
-    
-    return opciones
-
-# Menu para modificar grupos (0,3,3)
-def menuModificarGrupos(tblGrupos:pd.DataFrame,existeID):
-    limpiapantalla()
-    opciones = 5
-    print(Version)
-    
-    print(" ---------------------------------------------------------- ")
-    print("|                  Modificar Grupos                      |")
-    print(" ---------------------------------------------------------- ")
-    id = str(input("| Ingrese el id del grupo que desea modificar: "))
-    
-    #Revisar si se encuentra el elemento solicitado     
-    if existeID(tblGrupos, "IDGrupo", id):
-        print(" ---------------------------------------------------------- ")
-        print("Grupo a modificar: ")
-        print(tblGrupos.set_index("IDGrupo").loc[id].to_string())
-        print(" ---------------------------------------------------------- ")
-
-        #Recolectar los nuevos datos        
-        nuevoPeriodo = str(input("| Ingrese el nuevo periodo: "))
-        if nuevoPeriodo == "":
-            nuevoPeriodo = tblGrupos.set_index("IDGrupo")["Periodo"][id]
-        
-        nuevoHorario = "_"
-        while nuevoHorario == "_":                
-            nuevoHorario = str(input("| Ingrese el nuevo horario (mañan, tarde o noche): "))
-            if nuevoHorario == "":
-                nuevoHorario = tblGrupos.set_index("IDGrupo")["Horario"][id]
-            elif nuevoHorario not in ["mañana", "tarde", "noche"]:
-                nuevoHorario = "_"
-                print("| Horario no valido")
-        
-        nuevoEstado = "_"        
-        while nuevoEstado =="_":
-            nuevoEstado = str(input("| Ingrese el nuevo estado (Activo: 1 o Inactivo: 0): "))     
-            if nuevoEstado == "":
-                nuevoEstado = tblGrupos.set_index("IDGrupo")["Activo"][id]
-            elif nuevoEstado not in ["0","1"]:
-                nuevoEstado = "_"
-                print("| Estado no valido")
-         
-        nuevoProfesor = str(input("| Ingrese los nuevos profesores del grupo: "))     
-        if nuevoProfesor == "":
-            nuevoProfesor = tblGrupos.set_index("IDGrupo")["IDProfesores"][id]
-
-        grupoActualizado = [id, nuevoPeriodo, nuevoHorario, nuevoEstado, nuevoProfesor ]   
-        print(grupoActualizado)
-    else:
-        print("No ha sido encontrado el grupo para modificar!")
-        
-    print(" --------------------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                                          |")
-    print("| 9. Volver al menu principal                                         |")
-    print(" --------------------------------------------------------------------- ")
-    
-    return opciones
-    
-# Menu para modificar estudiantes (0,3,4)
-def menuModificarEstudiantes(tblEstudianes:pd.DataFrame,existeID):
-    limpiapantalla()
-    opciones = 5
-    print(Version)
-    
-    print(" ---------------------------------------------------------- ")
-    print("|               Modificar Estudiantes                      |")
-    print(" ---------------------------------------------------------- ")
-    id = str(input("| Ingrese el id del estudiante que desea modificar: "))
-    
-    #Revisar si se encuentra el elemento solicitado     
-    if existeID(tblEstudianes, "IDEstudiante", id):
-        print(" ---------------------------------------------------------- ")
-        print("Estudiante a modificar: ")
-        print(tblEstudianes.set_index("IDEstudiante").loc[id].to_string())
-        print(" ---------------------------------------------------------- ")
-        
-        #Recolectar los nuevos datos        
-        nuevoNombre = str(input("| Ingrese los nuevos nombres: "))
-        if nuevoNombre == "":
-            nuevoNombre = tblEstudianes.set_index("IDEstudiante")["Nombres"][id]
-                        
-        nuevoApellido = str(input("| Ingrese los nuevos apellidos: "))
-        if nuevoApellido == "":
-            nuevoApellido = tblEstudianes.set_index("IDEstudiante")["Apellidos"][id]
-        
-        nuevoEmail = "_"
-        while nuevoEmail == "_":
-            nuevoEmail = str(input("| Ingrese el nuevo Email: "))
-            if nuevoEmail == "":
-                nuevoEmail = tblEstudianes.set_index("IDEstudiante")["Email"][id]
-            elif "@" and ".com" not in nuevoEmail:
-                nuevoEmail = "_"
-                print("| Email no valido")
-        
-        nuevoGrupo = str(input("| Ingrese el id del nuevo grupo: "))
-        if nuevoGrupo == "":
-            nuevoGrupo = tblEstudianes.set_index("IDEstudiante")["IDGrupo"][id]
-                       
-        estudianteActualizado = [id, nuevoNombre, nuevoApellido, nuevoEmail, nuevoGrupo ]   
-        print(estudianteActualizado)
-    else:
-        print("| No ha sido encontrado el estudiante para modificar!")
-        
-    print(" --------------------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                                          |")
-    print("| 9. Volver al menu principal                                         |")
-    print(" --------------------------------------------------------------------- ")
-    
-    return opciones
-
-# Menu para modificar notas(0,3,5)
-def menuModificarNotas(tblNotas:pd.DataFrame, existeID, tblEstudiantes, tblMaterias):
-    limpiapantalla()
-    opciones = 5
-    print(Version)
-    
-    print(" ---------------------------------------------------------- ")
-    print("|                  Modificar Notas                         |")
-    print(" ---------------------------------------------------------- ")
-    id = str(input("| Ingrese el id de la nota que desea modificar:  "))
-    
-    #Revisar si se encuentra el elemento solicitado     
-    if existeID(tblNotas, "IdNota", id):
-        print(" ---------------------------------------------------------- ")
-        print("Nota a modificar: ")
-        print(tblNotas.set_index("IdNota").loc[id].to_string())
-        print(" ---------------------------------------------------------- ")
-
-        #Recolectar los nuevos datos
-        nuevoEstudiante = "_"
-        while nuevoEstudiante == "_":        
-            nuevoEstudiante = str(input("| Ingrese el id del nuevo estudiante: "))
-            if nuevoEstudiante == "":
-                    nuevoEstudiante = tblNotas.set_index("IdNota")["IDEstudiante"][id]
-            elif existeID(tblEstudiantes, "IDEstudiante", nuevoEstudiante):
-                pass
-            else:
-                print("| No ha sido encontrado el id del nuevo estudiante!")
-                nuevoEstudiante = "_"
-        
-        nuevaNota = "_"
-        while nuevaNota == "_":                
-            nuevaNota = str(input("| Ingrese la nueva nota (de 0 a 5): "))
-            if nuevaNota == "":
-                nuevaNota = tblNotas.set_index("IdNota")["Nota"][id]
-            elif float(nuevaNota) not in [x / 100.0 for x in range(0, 501)]:
-                print("| La nota no es valida")
-                nuevaNota = "_"
-        
-        nuevaMateria = "_"
-        while nuevaMateria == "_":    
-            nuevaMateria = str(input("| Ingrese el id de la nueva materia: "))     
-            if nuevaMateria == "":
-                nuevaMateria = tblNotas.set_index("IdNota")["IDMateria"][id]
-            elif existeID(tblMaterias, "IDMateria", nuevaMateria):
-                pass
-            else:
-                print("| No ha sido encontrado el id de la nueva materia!")
-                nuevaMateria = "_"
-        
-        notaActualizada = [id, nuevoEstudiante, nuevaNota, nuevaMateria]   
-        print(notaActualizada)
-    else:
-        print("| No ha sido encontrada la nota para modificar!")
-        
-    print(" --------------------------------------------------------------------- ")
-    print("| 0. Volver al menu anterior                                          |")
-    print("| 9. Volver al menu principal                                         |")
-    print(" --------------------------------------------------------------------- ")
-    
-    return opciones
