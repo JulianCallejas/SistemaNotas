@@ -1,4 +1,5 @@
 #Modulo para crear las diferentes clases a utilizar en la aplicacion
+import pandas as pd
 
 class Materia:
     """Clase asociada a la entidad Materia
@@ -6,7 +7,6 @@ class Materia:
   
     def __init__(self, datos:list) -> None:
         """Constructor de la clase materia
-
         Args:
             datos (list): La lista con los datos de la materia
         """
@@ -19,7 +19,6 @@ class Materia:
     
     def __str__(self) -> str:
         """Retorna la cadena representativa de la clase materia
-
         Returns:
             str: La cadena representativa de la clase materia conformada por su id y su nombre
         """
@@ -40,7 +39,6 @@ class Materia:
     @property
     def materia(self)->str:
         """Retorna el nombre de la materia
-
         Returns:
             str: El nombre de la materia
         """
@@ -49,7 +47,6 @@ class Materia:
     @property
     def ciclo(self)->str:
         """Retorna el ciclo de la materia
-
         Returns:
             str: El ciclo de la materia
         """
@@ -58,7 +55,6 @@ class Materia:
     @property
     def creditos(self)->str:
         """Retorna el numero de creditos de la materia
-
         Returns:
             str: El numero de creditos de la materia
         """
@@ -71,7 +67,6 @@ class Materia:
     @materia.setter
     def materia(self,materia:str)->None:
         """Actualiza el nombre de la materia
-
         Args:
             materia (str): El nuevo nombre de la materia
         """
@@ -80,7 +75,6 @@ class Materia:
     @ciclo.setter
     def ciclo(self, ciclo:str)->None:
         """Actualiza el ciclo de la materia
-
         Args:
             ciclo (str): El nuevo ciclo de la materia
         """
@@ -89,11 +83,37 @@ class Materia:
     @creditos.setter
     def creditos(self, creditos:str)->None:
         """Actualiza el numero de creditos e la materia
-
         Args:
             creditos (str): El nuevo numero de creditos de la materia
         """
         self.__creditos=creditos
+        
+    
+    def guardaCambios (self):
+        #Lee el csv y lo guarda en el archivo leerDoc
+        leerDoc = pd.read_csv('Materias.csv', dtype=str,sep=';')
+        #extrae los nombres de las columnas del dataframe
+        leerDoc = leerDoc.set_index('IDMateria')
+        #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
+        IDMateriaFila = self.id
+        #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
+        leerDoc.loc[[(IDMateriaFila)]] = [self.__materia,self.__ciclo,self.__creditos]
+        #Escribe los cambios en el csv
+        leerDoc.to_csv('Materias.csv', index = True, sep = ";")
+        #Retorna el archivo modificado
+        leerDoc = leerDoc.reset_index()
+        return leerDoc
+    
+    def agregaRegistro(self):
+        leerDoc = pd.read_csv('Materias.csv',dtype=str,sep=';')
+        if int(self.__id) in leerDoc['IDMateria']:
+            raise Exception("ID ya existe, ingrese un ID diferente")
+        else:
+            leerDoc = leerDoc.set_index('IDMateria')
+            leerDoc.loc[self.__id] = [self.__materia,self.__ciclo,self.__creditos]
+            leerDoc.to_csv('Materias.csv', index = True, sep = ";")
+            leerDoc = leerDoc.reset_index()
+            return leerDoc
 
 #------------------------------------------------------------------------------------------------------------------------------------------------  
 
@@ -103,7 +123,6 @@ class Profesor:
   
     def __init__(self, datos:list) -> None:
         """Constructor de la clase profesor
-
         Args:
             datos (_type_): Los datos del profesor
         """
@@ -114,7 +133,6 @@ class Profesor:
     
     def __str__(self) -> str:
         """Cadena representativa de la clase Profesor
-
         Returns:
             str: La cadena representativa de la clase profesor conformada por su id y nombre
         """
@@ -135,7 +153,6 @@ class Profesor:
     @property
     def nombre(self)->str:
         """Retorna el nombre del profesor
-
         Returns:
             str: El nombre del profesor
         """
@@ -144,7 +161,6 @@ class Profesor:
     @property
     def materias(self)->list[str]:
         """Retorna la lista de id de materias que puede dictar el profesor
-
         Returns:
             list[str]: La lista de materias que puede dictar el profesor
         """
@@ -157,7 +173,6 @@ class Profesor:
     @nombre.setter
     def nombre(self, nombre:str)->None:
         """Actualiza el nombre del profeslor
-
         Args:
             nombre (str): El nuevo nombre del profesor
         """
@@ -166,12 +181,37 @@ class Profesor:
     @materias.setter
     def materias(self, materias:list[str])->None:
         """Actualiza la lista de id de materias que puede dictar el profesor
-
         Args:
             materias (list[str]): La nueva lista de materias que puede dictar el profesor
         """
         self.__materias=materias    
+    
+    def guardaCambios (self):
+        #Lee el csv y lo guarda en el archivo leerDoc
+        leerDoc = pd.read_csv('Profesores.csv',dtype=str,sep=';')
+        #extrae los nombres de las columnas del dataframe
+        leerDoc = leerDoc.set_index('IDProfesor')
+        #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
+        IDFila = self.id
+        #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
+        #print(leerDoc.loc[[IDFila]])
+        leerDoc.loc[[(IDFila)]] = [self.__nombre,self.__materias]
+        #Escribe los cambios en el csv
+        leerDoc.to_csv('Profesores.csv', index = True, sep = ";")
+        #Retorna el archivo modificado
+        leerDoc = leerDoc.reset_index()
+        return leerDoc
 
+    def agregaRegistro(self):
+        leerDoc = pd.read_csv('Profesores.csv', dtype=str, sep=';')
+        if (self.__id) in leerDoc['IDProfesor']:
+            raise Exception("ID ya existe, ingrese un ID diferente")
+        else:
+            leerDoc = leerDoc.set_index('IDProfesor')
+            leerDoc.loc[self.__id] = [self.__nombre,self.__materias]
+            leerDoc.to_csv('Profesores.csv', index = True, sep = ";")
+            leerDoc = leerDoc.reset_index()
+            return leerDoc
 #------------------------------------------------------------------------------------------------------------------------------------------------
 
 class Grupo:
@@ -180,11 +220,10 @@ class Grupo:
     
     def __init__(self, datos:list) -> None:
         """Constructor de la clase gruo
-
         Args:
             datos (list): La lista de datos del grupo
         """
-        self.__id = datos[0]
+        self.__id = str(datos[0])
         self.__periodo = datos[1]
         self.__horario = datos[2]
         self.__activo = datos[3]
@@ -193,7 +232,6 @@ class Grupo:
     
     def __str__(self) -> str:
         """Retorna la cadena representativa de la clase grupo 
-
         Returns:
             str: La cadena representativa de la clase grupo conformada por su id, periodo, horario y su estado de activación
         """
@@ -238,7 +276,6 @@ class Grupo:
     @property
     def materias(self)->list[Materia]:
         """La lista de materias del grupo
-
         Returns:
             list[Materia]: La lista de materias del grupo
         """
@@ -247,7 +284,6 @@ class Grupo:
     @property
     def profesores(self)->list[Profesor]:
         """Retorna la lista de profesores del grupo
-
         Returns:
             list[Profesor]: La lista de profesores del grupo
         """
@@ -285,7 +321,6 @@ class Grupo:
     @materias.setter
     def materias(self, materias:list[Materia])->None:
         """Actualiza la lista de materias del grupo
-
         Args:
             materias (list[Materia]): La nueva lista de materias del grupo
         """
@@ -294,12 +329,37 @@ class Grupo:
     @profesores.setter
     def profesores(self, profesores:list[Profesor])->None:
         """Actualiza la lista de profesores del grupo
-
         Args:
             profesores (list[Profesor]): La nueva lista de profesores del grupo
         """ 
         self.__profesores=profesores
-        
+    
+    def guardaCambios (self):
+        #Lee el csv y lo guarda en el archivo leerDoc
+        leerDoc = pd.read_csv("Grupos.csv",dtype=str,sep=';')
+        #extrae los nombres de las columnas del dataframe
+        leerDoc = leerDoc.set_index('IDGrupo')
+        #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
+        IDFila = self.id
+        #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
+        #print(leerDoc.loc[[IDFila]])
+        leerDoc.loc[[(IDFila)]] = [self.__periodo, self.__horario, self.__activo, self.__materias, self.__profesores]
+        #Escribe los cambios en el csv
+        leerDoc.to_csv('Grupos.csv', index = True, sep = ";")
+        #Retorna el archivo modificado
+        leerDoc = leerDoc.reset_index()
+        return leerDoc
+    
+    def agregaRegistro(self):
+        leerDoc = pd.read_csv("Grupos.csv",dtype=str,sep=';')
+        if (self.__id) in leerDoc['IDGrupo']:
+            raise Exception("ID ya existe, ingrese un ID diferente")
+        else:
+            leerDoc = leerDoc.set_index('IDGrupo')
+            leerDoc.loc[self.__id] = [self.__periodo,self.__horario, self.__activo, self.__materias, self.__profesores]
+            leerDoc.to_csv('Grupos.csv', index = True, sep = ";")
+            leerDoc = leerDoc.reset_index()
+            return leerDoc
 #------------------------------------------------------------------------------------------------------------------------------------------------ 
 
 class Estudiante:
@@ -313,7 +373,6 @@ class Estudiante:
     
     def __init__(self,datos:list) -> None:
         """Constructor de la clase estudiante
-
         Args:
             datos (list): Lista con los datos del estudiante que vienen desde el dataframe
         """
@@ -327,7 +386,6 @@ class Estudiante:
         """El método str define la manera en como se muestra un objeto al momento de imprimirlo a convertirlo a string
         Al redefinirlo de esta manera se indica que en vez de mostrar algo como objet at 02x0ax00x, muestra la id y los apellidos
         del estudiante
-
         Returns:
             str: La cadena que representa al objeto
         """
@@ -424,6 +482,32 @@ class Estudiante:
         """
         self.__grupo = grupo 
         
+    def guardaCambios (self):
+        #Lee el csv y lo guarda en el archivo leerDoc
+        leerDoc = pd.read_csv("Estudiantes.csv",dtype=str,sep=';')
+        #extrae los nombres de las columnas del dataframe
+        leerDoc = leerDoc.set_index('IDEstudiante')
+        #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
+        IDFila = self.id
+        #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
+        #print(leerDoc.loc[[IDFila]])
+        leerDoc.loc[[(IDFila)]] = [self.__nombres, self.__apellidos, self.__email, self.__grupo]
+        #Escribe los cambios en el csv
+        leerDoc.to_csv('Estudiantes.csv', index = True, sep = ";")
+        #Retorna el archivo modificado
+        leerDoc = leerDoc.reset_index()
+        return leerDoc
+        
+    def agregaRegistro(self):
+        leerDoc = pd.read_csv("Estudiantes.csv",dtype=str,sep=';')
+        if (self.__id) in leerDoc['IDEstudiante']:
+            raise Exception("ID ya existe, ingrese un ID diferente")
+        else:
+            leerDoc = leerDoc.set_index('IDEstudiante')
+            leerDoc.loc[self.__id] = [self.__nombres,self.__apellidos, self.__email, self.__grupo]
+            leerDoc.to_csv('Estudiantes.csv', index = True, sep = ";")
+            leerDoc = leerDoc.reset_index()
+            return leerDoc
 #------------------------------------------------------------------------------------------------------------------------------------------------
 
 class Nota:
@@ -431,18 +515,16 @@ class Nota:
     """
     def __init__(self, datos:list) -> None:
         """Constructor de la clase nota
-
         Args:
             datos (list): La lista de datos de la nota
         """
-        self.__id = datos[0]
+        self.__id = str(datos[0])
         self.__estudiante = datos[1]
         self.__nota = datos[2]
         self.__materia = datos[3]
     
     def __str__(self) -> str:
         """Cadena representativa de la clase nota
-
         Returns:
             str: La cadena representativa de la clase nota conformada por su id, estudiante y materia
         """
@@ -463,7 +545,6 @@ class Nota:
     @property
     def estudiante(self)->Estudiante:
         """Retorna el estudiante asociado a la nota
-
         Returns:
             Estudiante: El estudiante asociado a la nota
         """
@@ -472,7 +553,6 @@ class Nota:
     @property
     def nota(self)->str:
         """Retorna la calificación númerica asociada a la nota
-
         Returns:
             str: _description_
         """
@@ -481,7 +561,6 @@ class Nota:
     @property
     def materia(self)->Materia:
         """Retorna la materia asociada a la nota
-
         Returns:
             Materia: La materia asociada a la nota
         """
@@ -494,7 +573,6 @@ class Nota:
     @estudiante.setter
     def estudiante(self, estudiante:Estudiante)->None:
         """Actualiza el estudiante asociado a la nota
-
         Args:
             estudiante (Estudiante): El nuevo estudiantes asociado a la nota
         """
@@ -503,7 +581,6 @@ class Nota:
     @nota.setter
     def nota(self, nota:str)->None:
         """Actualiza la calificación numerica asociada a la nota
-
         Args:
             nota (str): La nueva calificación numérica de la nota
         """
@@ -512,9 +589,34 @@ class Nota:
     @materia.setter
     def materia(self, materia:Materia)->None:
         """Actualiza la materia asociada a la nota
-
         Args:
             materia (Materia): La nueva materia asociada a la nota
         """
         self.__materia=materia
         
+    def guardaCambios (self):
+        #Lee el csv y lo guarda en el archivo leerDoc
+        leerDoc = pd.read_csv("Notas.csv",dtype=str,sep=';')
+        #extrae los nombres de las columnas del dataframe
+        leerDoc = leerDoc.set_index('IdNota')
+        #De la lista escoge el primer valor de la IDMateria, para encontrar la fila a modificar
+        IDFila = self.id
+        #Modifica la fila con  loc, en donde el valor de "IDMateria" sea igual a la modificada
+        #print(leerDoc.loc[[IDFila]])
+        leerDoc.loc[[(IDFila)]] = [self.__estudiante, self.__nota, self.__materia]
+        #Escribe los cambios en el csv
+        leerDoc.to_csv('Notas.csv', index = True, sep = ";")
+        #Retorna el archivo modificado
+        leerDoc = leerDoc.reset_index()
+        return leerDoc
+    
+    def agregaRegistro(self):
+        leerDoc = pd.read_csv("Notas.csv",dtype=str,sep=';')
+        if (self.__id) in leerDoc['IdNota']:
+            raise Exception("ID ya existe, ingrese un ID diferente")
+        else:
+            leerDoc = leerDoc.set_index('IdNota')
+            leerDoc.loc[self.__id] = [self.__estudiante,self.__nota, self.__materia]
+            leerDoc.to_csv('Notas.csv', index = True, sep = ";")
+            leerDoc = leerDoc.reset_index()
+            return leerDoc
